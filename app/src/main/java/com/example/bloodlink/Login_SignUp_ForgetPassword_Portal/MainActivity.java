@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private  void login() {
 
-        final String[] Token1 = new String[1];
+        final String[] Token1 = {new String()};
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferences.getString("URL", null);
 
@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("AuthToken", Token1[0]);
+                    editor.putString("phone",binding.emailEditText.getText().toString());
                     editor.apply();
 
 

@@ -116,8 +116,8 @@ public class RecyclerDonorAdapter extends RecyclerView.Adapter<RecyclerDonorAdap
             private void openGoogleMaps() {
                 // Latitude and Longitude of the location of user
                 //make latlong dynamic from database
-                double latitude = 28.807678;
-                double longitude = 80.547765;
+                double latitude = 28.733350;
+                double longitude = 80.572492;
 
                 Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude + "(Marker+Title)");
 

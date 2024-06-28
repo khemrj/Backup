@@ -47,6 +47,7 @@ import java.util.Map;
 public class becomeadonor extends AppCompatActivity {
     private String latLong;
     private String id;
+    private String Address;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private final int FINE_PERMISSION_CODE = 1;
@@ -77,6 +78,7 @@ public class becomeadonor extends AppCompatActivity {
         lastdonatedtime = findViewById(R.id.lastDate);
         gender = findViewById(R.id.gender);
         checkBox = findViewById(R.id.checkBox);
+
         button = findViewById(R.id.update);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +129,7 @@ public class becomeadonor extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Address = address.getText().toString();
                 becomeDonor();
 
                 // Check if the checkbox is checked
@@ -144,7 +147,7 @@ public class becomeadonor extends AppCompatActivity {
                             !dobText.isEmpty() &&
                             isEditTextFilled(gender)) {
                         // ------All fields are filled, show success message OR DATABASE HALNU
-                        Toast.makeText(becomeadonor.this, "Data updated successfully!", Toast.LENGTH_SHORT).show();
+
                         // Clear all EditText fields
                         fullName.getText().clear();
                         bloodGroup.getText().clear();
@@ -195,7 +198,9 @@ public class becomeadonor extends AppCompatActivity {
     }
 
     public void becomeDonor() {
-        String url = "http://192.168.1.69:8085/api/v1/members";
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL +"/api/v1/members";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
@@ -212,7 +217,7 @@ public class becomeadonor extends AppCompatActivity {
             }
 
         } catch (JSONException e) {
-            fullName.setText(e.toString());
+           e.printStackTrace();
         }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
@@ -256,23 +261,25 @@ public class becomeadonor extends AppCompatActivity {
     }
     public void updateMemberLocation(String id){
         //for lat long generation from Address
+
+
         GeoCodeLocation locationAddress = new GeoCodeLocation();
-        locationAddress.getAddressFromLocation(address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
+        locationAddress.getAddressFromLocation(Address, getApplicationContext(), new GeoCoderHandler());
 
         //fetching URL
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferences.getString("URL", null);
-
-
-        Log.d("Id2","id in memlocationfunctio is"+ id);
+        String latitude = sharedPreferences.getString("latitude",null);
+        String longitude = sharedPreferences.getString("longitude",null);
         String url = URL + "/api/v1/member-locations";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("id",id);
-            jsonRequest.put("latitude","80.572558");
-            jsonRequest.put("longitude","28.732943");
+            Log.d("Id2","id in memlocationfunctio is"+ id);
+            jsonRequest.put("memberLocation",id);
+            jsonRequest.put("latitude",latitude);
+            jsonRequest.put("longitude",longitude);
 
         } catch (JSONException e) {
            Log.d("ExceptionJsonbeco",e.toString());
@@ -280,7 +287,7 @@ public class becomeadonor extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,jsonRequest,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("OnresponselatLong","lat long is "+latLong);
+                Toast.makeText(becomeadonor.this, "Data updated successfully!", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -319,6 +326,14 @@ public class becomeadonor extends AppCompatActivity {
                 default:
                     locationAddress = null;
             }
+            SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String[] parts = locationAddress.split(" ");
+            editor.putString("latitude",parts[0]);
+            editor.putString("longitude",parts[1]);
+            editor.apply();
+
+
             Log.d("Location1",locationAddress);
 
         }

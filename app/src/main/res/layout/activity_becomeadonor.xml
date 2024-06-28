@@ -32,6 +32,7 @@
             android:orientation="vertical"
 
             >
+
             <EditText
                 android:id="@+id/fullName"
                 android:layout_width="match_parent"
@@ -41,16 +42,16 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/edit_round"
                 android:hint="Full Name"
+                android:text="Khem"
                 android:textAlignment="center"
                 android:textColorHint="@color/grey"
                 android:textSize="14sp"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="12sp"
                 app:autoSizeMaxTextSize="100sp"
+                app:autoSizeMinTextSize="12sp"
                 app:autoSizeStepGranularity="2sp"
 
 
-                />
+                app:autoSizeTextType="uniform" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
@@ -115,14 +116,14 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/edit_round"
-                android:hint="Address"
+                android:text="Nast College Dhangadhi"
                 android:textAlignment="center"
                 android:textColorHint="@color/grey"
                 android:textSize="14sp"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="12sp"
                 app:autoSizeMaxTextSize="100sp"
-                app:autoSizeStepGranularity="2sp"/>
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
 
             <EditText
                 android:id="@+id/dob"
@@ -135,7 +136,7 @@
                 android:ems="10"
                 android:inputType="text"
 
-                android:text="Date of birth"
+                android:text="2003-01-12"
                 android:textAlignment="center"
                 android:textColorHint="@color/grey" />
 
@@ -150,7 +151,7 @@
                 android:ems="10"
                 android:inputType="text"
 
-                android:text="last donated date"
+                android:text="2024-04-04"
                 android:textAlignment="center"
                 android:textColorHint="@color/grey" />
 
