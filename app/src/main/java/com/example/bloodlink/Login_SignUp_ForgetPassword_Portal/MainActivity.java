@@ -1,6 +1,8 @@
 package com.example.bloodlink.Login_SignUp_ForgetPassword_Portal;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -28,7 +30,9 @@ import com.example.bloodlink.databinding.ActivityMainBinding;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.regex.Pattern;
+
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
@@ -40,9 +44,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         // Ensure textView5 retains its initial text
         binding.titleTextView.setText("BloodLink");
+        binding.textView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,forgetPassword.class);
+                startActivity(intent);
+            }
+        });
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String URL = "http://"+binding.ipAddress.getText().toString()+":8085";
+                editor.putString("URL", URL);
+                editor.apply();
                 login();
             }
         });
@@ -105,9 +121,11 @@ public class MainActivity extends AppCompatActivity {
     private String validEmail() {
         String emailText = binding.emailEditText.getText().toString().trim();
         if (emailText.isEmpty()) {
-            return "Email cannot be empty";
+            //return "Email cannot be empty";
+            return "";
         } else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
-            return "Invalid Email Address";
+            //return "Invalid Email Address";
+            return "";
         }
         return null; // Return null if email is valid
     }
@@ -153,9 +171,11 @@ public class MainActivity extends AppCompatActivity {
     }
     private  void login() {
 
-        final String[] Token = new String[1];
+        final String[] Token1 = {new String()};
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
 
-        String url = "http://192.168.1.69:8085/api/v1/user/login";
+        String url = URL + "/api/v1/user/login";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
@@ -170,10 +190,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Token[0] = response.getString("accessToken");
+                    Token1[0] = response.getString("accessToken");
+
+
+                    //SharedPreferences to save Token to be accessed by many activities
+                    SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("AuthToken", Token1[0]);
+                    editor.putString("phone",binding.emailEditText.getText().toString());
+                    editor.apply();
+
+
+
+
+                   // Token token = new Token();
+                   // token.setToken(Token1[0]);
                     Intent intent=new Intent(MainActivity.this, dashboard.class);
-                    Log.d("mainToken","hello"+ Token[0]);  // This Token has null value but why??
-                    intent.putExtra("Token", Token[0]);
+                    Log.d("mainToken","hello"+ Token1[0]);  // This Token has null value but why??
+                   // intent.putExtra("Token", Token1[0]);
                     Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     Log.v("LoginResponse",response.toString());

@@ -12,11 +12,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/font1"
         android:text="Search Donor"
         android:textColor="@color/white"
-        android:textSize="40dp"
-        android:fontFamily="@font/font1"/>
+        android:textSize="40dp" />
+
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/edit_round"
+        android:gravity="center"
+        android:hint="Phone.no" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/patientNameContainer"
@@ -179,21 +191,20 @@
         />
 
 
-
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Use Default Address"
-        android:textSize="25dp"
-        android:textStyle="bold"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="50dp"
         android:checked="false"
         android:gravity="center"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="20dp"/>
+        android:text="Use Current Location"
+        android:textSize="25dp"
+        android:textStyle="bold" />
     <Button
-        android:id="@+id/btn"
+        android:id="@+id/btn_search"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="SEARCH"
@@ -201,8 +212,6 @@
         android:layout_marginRight="50dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/edit_round"/>
-
-
 
 
 </LinearLayout>

@@ -2,7 +2,9 @@ package com.example.bloodlink.donorpage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bloodlink.MapsActivity;
 import com.example.bloodlink.R;
+import com.example.bloodlink.googleMaps.Maps;
 
 import java.util.ArrayList;
 
@@ -27,7 +30,6 @@ public class RecyclerDonorAdapter extends RecyclerView.Adapter<RecyclerDonorAdap
     String imageButton;//EX09april
     Button call;
     ArrayList<DonorModel> arrDonor;
-
     RecyclerDonorAdapter(@NonNull Context context, ArrayList<DonorModel> arrDonor) {
         this.context = context;
         this.arrDonor = arrDonor;
@@ -105,6 +107,7 @@ public class RecyclerDonorAdapter extends RecyclerView.Adapter<RecyclerDonorAdap
                     //  intent.putExtra("donor_id", donor.getId(txtLocation)); // Example: Passing donor ID
                     // Start the LocationActivity
                     // v.getContext().startActivity(intent);
+
                     openGoogleMaps();
                 }
 
@@ -113,8 +116,8 @@ public class RecyclerDonorAdapter extends RecyclerView.Adapter<RecyclerDonorAdap
             private void openGoogleMaps() {
                 // Latitude and Longitude of the location of user
                 //make latlong dynamic from database
-                double latitude = 28.807678;
-                double longitude = 80.547765;
+                double latitude = 28.733350;
+                double longitude = 80.572492;
 
                 Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude + "(Marker+Title)");
 

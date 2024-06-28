@@ -5,6 +5,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -81,9 +82,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
         LatLng location = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(location).title(""));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
-
+        Log.d("location 1",location.toString());
 
     }
 

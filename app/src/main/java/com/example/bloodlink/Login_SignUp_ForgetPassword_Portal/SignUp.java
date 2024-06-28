@@ -2,8 +2,12 @@ package com.example.bloodlink.Login_SignUp_ForgetPassword_Portal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,6 +40,7 @@ ActivitySignUpBinding binding;
         binding.signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Signup();
             }
         });
@@ -207,7 +212,9 @@ ActivitySignUpBinding binding;
         return null; // Return null if email is valid
     }
     public void Signup(){
-        String url = "http://192.168.1.69:8085/api/v1/user/signup";
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL + "/api/v1/user/signup";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
@@ -239,6 +246,21 @@ ActivitySignUpBinding binding;
         });
 
         requestQueue.add(jsonObjectRequest);
+    }
+    private class GeoCoderHandler extends Handler {
+        @Override
+        public void handleMessage(Message message) {
+            String locationAddress;
+            switch (message.what) {
+                case 1:
+                    Bundle bundle = message.getData();
+                    locationAddress = bundle.getString("address");
+                    break;
+                default:
+                    locationAddress = null;
+            }
+           Log.d("Location1",locationAddress);
+        }
     }
     //----------------------------------------end validation-------------------------------
 }
