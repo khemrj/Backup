@@ -33,7 +33,6 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.regex.Pattern;
 
-import TokenClass.Token;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
