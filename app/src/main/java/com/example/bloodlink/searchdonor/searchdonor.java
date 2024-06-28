@@ -77,7 +77,7 @@ public class searchdonor extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                ReuuestBlood();
+                RequestBlood();
                 //geocode
 
 //                if(binding.checkBox.isChecked())
@@ -210,7 +210,7 @@ public class searchdonor extends AppCompatActivity {
         }
         return null; // Return null if email is valid
     }
-    public void ReuuestBlood() {
+    public void RequestBlood() {
 
         GeoCodeLocation locationAddress = new GeoCodeLocation();
         locationAddress.getAddressFromLocation(binding.addressEditText.getText().toString(), getApplicationContext(), new GeoCoderHandler());
