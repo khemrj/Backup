@@ -6,9 +6,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.donorpage.DonorModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,7 +74,7 @@ public class ApiClient {
 
                 String name = donorInfoObj.getJSONObject("memberInfo").getString("firstname") +
                         " " + donorInfoObj.getJSONObject("memberInfo").getString("lastname");
-                String age = calculateAge(donorInfoObj.getJSONObject("memberInfo").getString("dateOfBirth"));
+                String age  = calculateAge(donorInfoObj.getJSONObject("memberInfo").getString("dateOfBirth"));
                 String bloodgroup = donorInfoObj.getJSONObject("memberInfo").getString("bloodGroup");
 
                 // Check if "pints" exists in the JSON object
@@ -96,7 +96,8 @@ public class ApiClient {
 
 
     private String calculateAge(String dateOfBirth) {
-        // Implement your logic to calculate age based on dateOfBirth
-        return "30"; // Dummy age for demonstration
+        String age = Utils.calculateAge(dateOfBirth);
+        return age;
+
     }
 }
