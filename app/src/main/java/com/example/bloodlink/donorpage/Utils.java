@@ -1,4 +1,4 @@
-package com.example.bloodlink.requestedpage;
+package com.example.bloodlink.donorpage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

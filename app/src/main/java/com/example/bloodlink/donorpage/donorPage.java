@@ -8,13 +8,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.VolleyError;
 import com.example.bloodlink.R;
-import com.example.bloodlink.requestedpage.ApiClient;
+
 import java.util.ArrayList;
 
 public class donorPage extends AppCompatActivity {

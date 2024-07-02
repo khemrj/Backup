@@ -51,7 +51,7 @@ public class RecyclerDonorAdapter extends RecyclerView.Adapter<RecyclerDonorAdap
         if ("Accepted".equals(donor.getAcceptButtonText())) {
             holder.acceptButton.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
         } else {
-            holder.acceptButton.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
+            holder.acceptButton.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
         }
 
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
