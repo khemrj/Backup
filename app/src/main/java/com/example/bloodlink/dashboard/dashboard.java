@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.example.bloodlink.R;
 import com.example.bloodlink.databinding.ActivityDashboardBinding;
 import com.example.bloodlink.donorpage.donorPage;
 import com.example.bloodlink.myprofile.myprofile;
+import com.example.bloodlink.requestedpage.requestlistpage;
 import com.example.bloodlink.searchdonor.searchdonor;
 
 import java.util.ArrayList;
@@ -23,11 +25,20 @@ import java.util.ArrayList;
 public class dashboard extends AppCompatActivity {
 ActivityDashboardBinding binding;
     ImageButton notify;
+    Button requests;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        requests=findViewById(R.id.requests);
+        requests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(dashboard.this, requestlistpage.class);
+                startActivity(intent);
+            }
+        });
 
 
         notify = findViewById(R.id.notification);

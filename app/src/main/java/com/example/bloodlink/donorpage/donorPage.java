@@ -1,46 +1,71 @@
 package com.example.bloodlink.donorpage;
 
-import static com.example.bloodlink.R.*;
-
-import android.content.Intent;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.bloodlink.googleMaps.Maps;
+import com.android.volley.VolleyError;
 import com.example.bloodlink.R;
 
 import java.util.ArrayList;
-public class donorPage extends AppCompatActivity {
-ArrayList<DonorModel> arrDonor=new ArrayList<>();
-ImageButton imageButton;
-    @Override
 
+public class donorPage extends AppCompatActivity {
+    ArrayList<DonorModel> arrDonor = new ArrayList<>();
+    RecyclerDonorAdapter adapter;
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layout.activity_donor_page);
+        setContentView(R.layout.activity_donor_page);
 
+        createNotificationChannel();
 
-        RecyclerView recyclerView=findViewById(id.recyclerdonor);
+        RecyclerView recyclerView = findViewById(R.id.recyclerdonor);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-        arrDonor.add(new DonorModel(drawable.baseline_person_24,"Suman Thakur","23","AB-","1","Dhangadhi"));
-        arrDonor.add(new DonorModel(drawable.baseline_person_24,"Ram","22","B+","1","Dhangadhi"));
-        arrDonor.add(new DonorModel(drawable.baseline_person_24,"Hari Kumar","24","AB-","1","Dhangadhi"));
-        arrDonor.add(new DonorModel(drawable.baseline_person_24,"Kishan Joshi","35","B-","1","Attarya"));
-        arrDonor.add(new DonorModel(drawable.baseline_person_24,"Rahul Bhatta","29","AB","1","Attarya"));
-        arrDonor.add(new DonorModel(drawable.baseline_person_24,"Ravi Chy","27","O+","1","Attarya"));
-        arrDonor.add(new DonorModel(drawable.baseline_person_24,"Bibek Dewal","28","AB","1","Attarya"));
-        RecyclerDonorAdapter adapter=new RecyclerDonorAdapter(this,arrDonor);
+        // Initialize adapter
+        adapter = new RecyclerDonorAdapter(this, arrDonor);
         recyclerView.setAdapter(adapter);
 
+        fetchDonorData();
+    }
+
+    private void fetchDonorData() {
+        ApiClient.getInstance(this).getDonors(new ApiClient.VolleyCallback() {
+            @Override
+            public void onSuccess(ArrayList<DonorModel> result) {
+                arrDonor.addAll(result);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                // Log detailed error message
+                Log.e("donorPage", "Error fetching donors: " + error.getMessage(), error);
+                // Show a toast or alert indicating the failure to the user
+                Toast.makeText(donorPage.this, "Error fetching donors. Please check your network connection.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Donor Channel";
+            String description = "Channel for donor notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("donorChannelId", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 }
