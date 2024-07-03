@@ -88,7 +88,7 @@ public class becomeadonor extends AppCompatActivity {
             }
         });
         cancel = findViewById(R.id.cancel);
-        bloodGroup = findViewById(R.id.bloodGroup);
+        i just deleted "bloodGroup = findViewById(R.id.bloodGroup);"
 
 
         dob.setOnClickListener(new View.OnClickListener() {
@@ -337,7 +337,7 @@ public class becomeadonor extends AppCompatActivity {
 
          heloo ther i want to  beat you
             //chandan chat bhandar
-   Log.d("Location1",locationAddress);
+  i just deleted " Log.d("Location1",locationAddress);"
         }
 
 
