@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 //khem is going Goa
+//ram is mad
 public class becomeadonor extends AppCompatActivity {
     private String latLong;
     private String id;
