@@ -335,9 +335,9 @@ public class becomeadonor extends AppCompatActivity {
             editor.apply();
 
 
-            Log.d("Location1",locationAddress);
+         heloo ther i want to  beat you
             //chandan chat bhandar
-
+   Log.d("Location1",locationAddress);
         }
 
 
