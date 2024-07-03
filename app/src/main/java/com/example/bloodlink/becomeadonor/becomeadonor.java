@@ -336,6 +336,7 @@ public class becomeadonor extends AppCompatActivity {
 
 
             Log.d("Location1",locationAddress);
+            //chandan chat bhandar
 
         }
 
