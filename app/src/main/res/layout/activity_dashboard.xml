@@ -145,7 +145,7 @@
                     android:id="@+id/txtdonatedname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Suman Shah"
+                    android:text="Suman 123333"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -181,7 +181,7 @@
                     android:id="@+id/txtdonatedname2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Prakash Sapkota"
+                    android:text="Prakash chakkota"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
