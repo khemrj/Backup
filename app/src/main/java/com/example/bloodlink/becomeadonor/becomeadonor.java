@@ -95,7 +95,7 @@ public class becomeadonor extends AppCompatActivity {
             public void onClick(View v) {
                 // on below line we are getting
                 // the instance of our calendar.
-                final Calendar c = Calendar.getInstance();
+               i just removed  final Calendar c = Calendar.getInstance();
 
                 // on below line we are getting
                 // our day, month and year.
@@ -334,8 +334,9 @@ public class becomeadonor extends AppCompatActivity {
             editor.apply();
 
 
-            Log.d("Location1",locationAddress);
 
+            //chandan chat bhandar
+            Log.d("Location1",locationAddress);
         }
 
 
