@@ -99,7 +99,7 @@ public class becomeadonor extends AppCompatActivity {
 
                 // on below line we are getting
                 // our day, month and year.
-              i am here  int year = c.get(Calendar.YEAR);
+               int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
@@ -233,7 +233,7 @@ public class becomeadonor extends AppCompatActivity {
 
                 Intent intent = new Intent(becomeadonor.this, dashboard.class);
                 // This Token has null value but why??
-                i removes following :
+
                 //startActivity(intent);
             }
         }, new Response.ErrorListener() {

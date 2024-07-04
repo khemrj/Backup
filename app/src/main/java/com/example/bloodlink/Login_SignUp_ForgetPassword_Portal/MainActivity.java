@@ -2,8 +2,10 @@ package com.example.bloodlink.Login_SignUp_ForgetPassword_Portal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.R;
 import com.example.bloodlink.dashboard.dashboard;
 import com.example.bloodlink.databinding.ActivityMainBinding;
+import com.example.bloodlink.utility.NetworkChangeListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +39,19 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
+    NetworkChangeListener networkChangeListener =new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         // Ensure textView5 retains its initial text
         binding.titleTextView.setText("BloodLink");
+
         binding.textView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        binding.emailEditText.setLongClickable(false);
 //        binding.emailEditText.setTextIsSelectable(false);
-        emailFocusListener();
+        phoneFocusListener();
         passwordFocusListener();
 //        binding.textView3.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -92,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void emailFocusListener() {
-        binding.emailEditText.addTextChangedListener(new TextWatcher() {
+    private void phoneFocusListener() {
+        binding.phoneEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -106,26 +123,25 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
 
 
-                String result = validEmail();
+                String result = validPhone();
                 if (result != null) {
-                    binding.emailContainer.setHelperText(result);
+                    binding.phoneContainer.setHelperText(result);
 
                 } else {
-                    binding.emailContainer.setHelperText("");
+                    binding.phoneContainer.setHelperText("");
                    // Clear error text if email is valid
                 }
             }
         });
     }
 
-    private String validEmail() {
-        String emailText = binding.emailEditText.getText().toString().trim();
-        if (emailText.isEmpty()) {
-            //return "Email cannot be empty";
-            return "";
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
-            //return "Invalid Email Address";
-            return "";
+    private String validPhone() {
+        String phoneText = binding.phoneEditText.getText().toString().trim();
+        if (phoneText.length() != 10) {
+            return "Minimum 10 number";
+        }
+        if (!phoneText.matches(".*[0-9].*")) {
+            return "Must be all Digit";
         }
         return null; // Return null if email is valid
     }
@@ -180,8 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("username", (binding.emailEditText.getText().toString()));
-            jsonRequest.put("password", binding.passwordEditText.getText().toString());
+            jsonRequest.put("username", (binding.phoneEditText.getText().toString()));
+            jsonRequest.put("password", binding.phoneEditText.getText().toString());
         } catch (JSONException e) {
            Log.d("JsonException",e.toString());
         }
@@ -197,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("AuthToken", Token1[0]);
-                    editor.putString("phone",binding.emailEditText.getText().toString());
+                    editor.putString("phone",binding.phoneEditText.getText().toString());
                     editor.apply();
 
 
