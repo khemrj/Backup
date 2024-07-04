@@ -95,11 +95,11 @@ public class becomeadonor extends AppCompatActivity {
             public void onClick(View v) {
                 // on below line we are getting
                 // the instance of our calendar.
-               khem just removed  final Calendar c = Calendar.getInstance();
+                final Calendar c = Calendar.getInstance();
 
                 // on below line we are getting
                 // our day, month and year.
-                int year = c.get(Calendar.YEAR);
+               int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
@@ -233,7 +233,8 @@ public class becomeadonor extends AppCompatActivity {
 
                 Intent intent = new Intent(becomeadonor.this, dashboard.class);
                 // This Token has null value but why??
-                startActivity(intent);
+
+                //startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override

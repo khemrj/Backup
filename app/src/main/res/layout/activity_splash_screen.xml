@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="375dp"
         app:lottie_speed="1"
-        app:lottie_fileName="Test6.json"
+        app:lottie_fileName="BloodLink.json"
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
         />

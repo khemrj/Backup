@@ -23,15 +23,18 @@ Runnable runnable;
         runnable=new Runnable() {
             @Override
             public void run() {
+                // Start the Lottie animation
             lottieAnimationView.playAnimation();
                 Intent i =new Intent(SplashScreen.this, MainActivity.class);
                 startActivity(i);
                 finish();
             }
         };
-        handler.postDelayed(runnable,3000);
-
-
-
+        handler.postDelayed(runnable,5000);
+    }
+    @Override//remove call back when activity is destroyed
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 }
