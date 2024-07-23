@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Token1[0] = response.getString("accessToken");
 
-
+                    Log.d("loginresponse",response.toString());
                     //SharedPreferences to save Token to be accessed by many activities
                     SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();

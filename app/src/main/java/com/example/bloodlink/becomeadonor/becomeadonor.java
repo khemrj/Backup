@@ -28,6 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.R;
 import com.example.bloodlink.dashboard.dashboard;
@@ -198,13 +199,18 @@ public class becomeadonor extends AppCompatActivity {
     }
 
     public void becomeDonor() {
+        SharedPreferences sharedPreferencesauth = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+        String userId = sharedPreferencesauth.getString("userId",null);
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String latitude = sharedPreferences.getString("latitude",null);
+        String longitude = sharedPreferences.getString("longitude",null);
         String URL = sharedPreferences.getString("URL", null);
         String url = URL +"/api/v1/members";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
         try {
+            JSONObject memberObject = new JSONObject();
             jsonRequest.put("firstname",fullName.getText() );
             jsonRequest.put("middlename", "Kumar");
             jsonRequest.put("lastname", "Chaudhary");
@@ -215,6 +221,13 @@ public class becomeadonor extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 jsonRequest.put("registrationDate", LocalDate.now());
             }
+            JSONObject memberLocationObject = new JSONObject();
+            memberLocationObject.put("latitude",latitude);
+            memberLocationObject.put("longitude",longitude);
+            jsonRequest.put("memberLocation",memberLocationObject);
+            Log.d("nestedRequest",jsonRequest.toString());
+
+
 
         } catch (JSONException e) {
            e.printStackTrace();
@@ -226,7 +239,7 @@ public class becomeadonor extends AppCompatActivity {
                 try {
                     id = response.getString("id");
                     Log.d("memberResponse","id is"+id);
-                    updateMemberLocation(id);
+                    setUserId(id,userId);
                 } catch (JSONException e) {
                     Log.d("xceptionInResponse",e.toString());
                 }
@@ -259,61 +272,6 @@ public class becomeadonor extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
-    public void updateMemberLocation(String id){
-        //for lat long generation from Address
-
-
-        GeoCodeLocation locationAddress = new GeoCodeLocation();
-        locationAddress.getAddressFromLocation(Address, getApplicationContext(), new GeoCoderHandler());
-
-        //fetching URL
-        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
-        String URL = sharedPreferences.getString("URL", null);
-        String latitude = sharedPreferences.getString("latitude",null);
-        String longitude = sharedPreferences.getString("longitude",null);
-        String url = URL + "/api/v1/member-locations";
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-
-        JSONObject jsonRequest = new JSONObject();
-        try {
-            Log.d("Id2","id in memlocationfunctio is"+ id);
-            jsonRequest.put("memberLocation",id);
-            jsonRequest.put("latitude",latitude);
-            jsonRequest.put("longitude",longitude);
-
-        } catch (JSONException e) {
-           Log.d("ExceptionJsonbeco",e.toString());
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,jsonRequest,new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(becomeadonor.this, "Data updated successfully!", Toast.LENGTH_SHORT).show();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.d("volleyerrorUpdareMember", error.toString());
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
-                String Token = sharedPreferences.getString("AuthToken", null);
-                Log.d("BeDonorTokeninheader",Token);
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer "+Token);
-
-                return headers;
-            }
-        };
-
-        requestQueue.add(jsonObjectRequest);
-
-
-
-    }
     private class GeoCoderHandler extends Handler {
         @Override
         public void handleMessage(Message message) {
@@ -339,6 +297,40 @@ public class becomeadonor extends AppCompatActivity {
         }
 
 
+    }
+    public void setUserId(String memberId, String userId){
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL +"/api/v1/members/setUserId/" +memberId + "/"+userId;
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+Log.d("seruserIdresponse",response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d("volleyErroruserIdset", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+//                Intent i = getIntent();
+//                String Token = i.getStringExtra("Token");
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                Log.d("BeDonorTokeninheader",Token);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
     }
 
 
