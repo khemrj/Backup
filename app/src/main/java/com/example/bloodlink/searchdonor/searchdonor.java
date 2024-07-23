@@ -38,6 +38,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class searchdonor extends AppCompatActivity {
 
@@ -226,10 +227,14 @@ public class searchdonor extends AppCompatActivity {
         try {
             jsonRequest.put("bloodGroup",binding.bloodgroup.getText());
             jsonRequest.put("latitude",lat);
+            jsonRequest.put("name","khem");
             jsonRequest.put("longitude", lon);
             jsonRequest.put("phone", binding.phone.getText());
             jsonRequest.put("pints", binding.pintEditText.getText());
-
+            JSONObject memberLocationObject = new JSONObject();
+            memberLocationObject.put("latitude",lat);
+            memberLocationObject.put("longitude",lon);
+            jsonRequest.put("memberLocation",memberLocationObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
