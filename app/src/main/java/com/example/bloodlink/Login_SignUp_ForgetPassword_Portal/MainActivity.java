@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         JSONObject jsonRequest = new JSONObject();
         try {
             jsonRequest.put("username", (binding.phoneEditText.getText().toString()));
-            jsonRequest.put("password", binding.phoneEditText.getText().toString());
+            jsonRequest.put("password", binding.passwordEditText.getText().toString());
         } catch (JSONException e) {
            Log.d("JsonException",e.toString());
         }

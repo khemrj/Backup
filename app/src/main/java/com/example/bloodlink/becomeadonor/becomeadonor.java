@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -56,9 +57,9 @@ public class becomeadonor extends AppCompatActivity {
 
     DatePickerDialog.OnDateSetListener setListener;
 
-    CheckBox checkBox;
-    EditText fullName, address,lastdonatedtime,dob;
-    Button button, cancel;
+
+    EditText firstName,middleName,lastName, address,lastdonatedtime,dob,lastDate;
+    Button updatebtn, cancelbtn,update,cancel;
     TextView DOB;
     AutoCompleteTextView bloodGroup, gender;
 
@@ -72,24 +73,26 @@ public class becomeadonor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_becomeadonor);
         dob = findViewById(R.id.dob);
-        fullName = findViewById(R.id.fullName);
+        firstName= findViewById(R.id.firstName);
+        middleName=findViewById(R.id.middleName);
+        lastName=findViewById(R.id.lastName);
         // bloodGroup = findViewById(R.id.bloodGroup);
         address = findViewById(R.id.address);
         lastdonatedtime = findViewById(R.id.lastDate);
         gender = findViewById(R.id.gender);
-        checkBox = findViewById(R.id.checkBox);
 
-        button = findViewById(R.id.update);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        updatebtn = findViewById(R.id.update);
+        updatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-        cancel = findViewById(R.id.cancel);
+        cancelbtn = findViewById(R.id.cancel);
         bloodGroup = findViewById(R.id.bloodGroup);
 
-
+        dob.setInputType(InputType.TYPE_CLASS_DATETIME);
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,51 +124,97 @@ public class becomeadonor extends AppCompatActivity {
                 // display our date picker dialog.
                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
                 datePickerDialog.show();
+                // After the DatePickerDialog is dismissed, set the input type to TYPE_NULL
+                dob.setInputType(InputType.TYPE_NULL);
+            }
+        });
+        lastdonatedtime.setInputType(InputType.TYPE_CLASS_DATETIME);
+        lastdonatedtime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // on below line we are getting
+                // the instance of our calendar.
+                final Calendar c = Calendar.getInstance();
+
+                // on below line we are getting
+                // our day, month and year.
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // on below line we are creating a variable for date picker dialog.
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        // on below line we are passing context.
+                        becomeadonor.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+                        // on below line we are setting date to our edit text.
+                        // dob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                        lastdonatedtime.setText(year + "/" + monthOfYear + "/" + dayOfMonth);
+                    }
+                },
+                        // on below line we are passing year,
+                        // month and day for selected date in our date picker.
+                        year, month, day);
+                // at last we are calling show to
+                // display our date picker dialog.
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                datePickerDialog.show();
+                lastdonatedtime.setInputType(InputType.TYPE_NULL);
             }
         });
 
 
         //checkbox ko lagi
-        button.setOnClickListener(new View.OnClickListener() {
+        updatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Address = address.getText().toString();
                 becomeDonor();
 
                 // Check if the checkbox is checked
-                if (checkBox.isChecked()) {
+//                if (checkBox.isChecked()) {
                     // Check if all EditText fields are filled
                     //  int dayOfMonth = 0;
                     // int monthOfYear=0;
                     // int year = 0;
                     //String D= dob.getText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year).toString();
                     // int s=Integer.parseInt(D);
-                    String dobText = dob.getText().toString().trim(); // Trim to remove leading/trailing spaces
-                    if (isEditTextFilled(fullName) &&
+                    String dobText = dob.getText().toString().trim();// Trim to remove leading/trailing spaces
+                    if (isEditTextFilled(firstName) &&
+                            isEditTextFilled(middleName)&&
+                            isEditTextFilled(lastName)&&
                             isEditTextFilled(bloodGroup) &&
                             isEditTextFilled(address) &&
                             !dobText.isEmpty() &&
+                            isEditTextFilled(lastdonatedtime)&&
                             isEditTextFilled(gender)) {
                         // ------All fields are filled, show success message OR DATABASE HALNU
 
                         // Clear all EditText fields
-                        fullName.getText().clear();
+                        firstName.getText().clear();
+                        middleName.getText().clear();
+                        lastName.getText().clear();
                         bloodGroup.getText().clear();
                         address.getText().clear();
 
                         gender.getText().clear();
                         dob.setText("");
+                        lastdonatedtime.setText("");
+
+
+
                     } else {
                         // At least one field is empty, show an error message
                         Toast.makeText(becomeadonor.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    // Checkbox is not checked, show a message
-                    Toast.makeText(becomeadonor.this, "Please check the 'Become a Donor' checkbox.", Toast.LENGTH_SHORT).show();
-                }
+//                } else {
+//                    // Checkbox is not checked, show a message
+//                    Toast.makeText(becomeadonor.this, "Please check the 'Become a Donor' checkbox.", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
-        cancel.setOnClickListener(new View.OnClickListener() {
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(becomeadonor.this, dashboard.class);
@@ -205,9 +254,9 @@ public class becomeadonor extends AppCompatActivity {
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("firstname",fullName.getText() );
-            jsonRequest.put("middlename", "Kumar");
-            jsonRequest.put("lastname", "Chaudhary");
+            jsonRequest.put("firstname",firstName.getText() );
+            jsonRequest.put("middlename", middleName.getText());
+            jsonRequest.put("lastname", lastName.getText());
             jsonRequest.put("dateOfBirth", dob.getText());
             jsonRequest.put("bloodGroup", bloodGroup.getText());
             jsonRequest.put("gender", gender.getText());
@@ -228,7 +277,7 @@ public class becomeadonor extends AppCompatActivity {
                     Log.d("memberResponse","id is"+id);
                     updateMemberLocation(id);
                 } catch (JSONException e) {
-                    Log.d("xceptionInResponse",e.toString());
+                    Log.d("exceptionInResponse",e.toString());
                 }
 
                 Intent intent = new Intent(becomeadonor.this, dashboard.class);

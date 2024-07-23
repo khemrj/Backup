@@ -23,4 +23,10 @@
     <string name="type">Type\n</string>
     <string name="become_a_donor">Become a donor</string>
     <string name="forgot_password">Forgot Password</string>
+    <string name="middle_name">Middle Name\n</string>
+    <string name="first_name">First Name\n</string>
+    <string name="blood_group">BloodGroup</string>
+    <string name="last_name">Last Name\n</string>
+    <string name="dob">Date of birth</string>
+    <string name="last_donated_date">Last donated Date</string>
 </resources>
