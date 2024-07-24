@@ -43,6 +43,7 @@ import java.util.Random;
 public class searchdonor extends AppCompatActivity {
 
     ActivitySearchdonorBinding binding;
+    private String requesterId;
     ArrayList<String>arrbloodGroup=new ArrayList<>();
 
     @Override
@@ -103,11 +104,7 @@ public class searchdonor extends AppCompatActivity {
                 if (patient.isEmpty() && bloodgroup.isEmpty() && pint.isEmpty() && s.isEmpty()) {
                     Toast.makeText(searchdonor.this, "Please enter a field", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(searchdonor.this, dlist.class);
-                    intent.putExtra("bloodgroup", bloodgroup);
-                    intent.putExtra("pints", pint);
-                    intent.putExtra("address", s);
-                    startActivity(intent);
+
                 }
 
             }
@@ -242,7 +239,12 @@ public class searchdonor extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                Log.d("RequesterResponse",response.toString());
+                try {
+                   requesterId = response.getString("id");
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
 
                 Intent intent = new Intent(searchdonor.this,dlist.class);
                 // This Token has null value but why??
@@ -300,6 +302,59 @@ public class searchdonor extends AppCompatActivity {
 
     }
     public void saveRequest(){
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String lat = sharedPreferences.getString("latitudeSearch",null);
+        String lon = sharedPreferences.getString("longitudeSearch",null);
+        String url = URL +"/api/v1/requesters";
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("totalPintsDonated",binding.bloodgroup.getText());
+            jsonRequest.put("latitude",lat);
+            jsonRequest.put("longitude", lon);
+            jsonRequest.put("requester_id", lon);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                Intent intent = new Intent(searchdonor.this,dlist.class);
+                // This Token has null value but why??
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("volleyError", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+//                Intent i = getIntent();
+//                String Token = i.getStringExtra("Token");
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                Log.d("BeDonorTokeninheader",Token);
+
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
 
     }
 }

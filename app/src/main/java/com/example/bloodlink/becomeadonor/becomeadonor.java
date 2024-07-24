@@ -33,6 +33,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.R;
 import com.example.bloodlink.dashboard.dashboard;
 import com.example.bloodlink.databinding.ActivityMapsBinding;
+import com.example.bloodlink.searchdonor.GeoCodeLocation;
+import com.example.bloodlink.searchdonor.searchdonor;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.GoogleMap;
 
@@ -48,6 +50,7 @@ import java.util.Map;
 public class becomeadonor extends AppCompatActivity {
     private String latLong;
     private String id;
+    private String firstName,middleName,lastName,stringBloodGroup,dateOfBirth,registrationDate,stringGender,stringLastDonatedDate;
     private String Address;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -72,6 +75,7 @@ public class becomeadonor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_becomeadonor);
+
         dob = findViewById(R.id.dob);
         fullName = findViewById(R.id.fullName);
         // bloodGroup = findViewById(R.id.bloodGroup);
@@ -79,6 +83,7 @@ public class becomeadonor extends AppCompatActivity {
         lastdonatedtime = findViewById(R.id.lastDate);
         gender = findViewById(R.id.gender);
         checkBox = findViewById(R.id.checkBox);
+
 
         button = findViewById(R.id.update);
         button.setOnClickListener(new View.OnClickListener() {
@@ -130,8 +135,16 @@ public class becomeadonor extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Address = address.getText().toString();
-                becomeDonor();
+//                Address = address.getText().toString();
+//                firstName = et_firstName.getText().toString();
+//                middleName = et_middleName.getText().toString();
+//                lastName = et_lastName.getText().toString();
+                stringBloodGroup = bloodGroup.getText().toString();
+                dateOfBirth = dob.getText().toString();
+               // registrationDate =  ;
+                stringGender = gender.getText().toString();
+                GeoCodeLocation locationAddress = new GeoCodeLocation();
+                locationAddress.getAddressFromLocation(address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
 
                 // Check if the checkbox is checked
                 if (checkBox.isChecked()) {
@@ -207,7 +220,6 @@ public class becomeadonor extends AppCompatActivity {
         String URL = sharedPreferences.getString("URL", null);
         String url = URL +"/api/v1/members";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-
         JSONObject jsonRequest = new JSONObject();
         try {
             JSONObject memberObject = new JSONObject();
@@ -291,7 +303,7 @@ public class becomeadonor extends AppCompatActivity {
             editor.putString("longitude",parts[1]);
             editor.apply();
 
-
+            becomeDonor();
             Log.d("Location1",locationAddress);
 
         }
