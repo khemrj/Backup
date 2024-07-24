@@ -1,9 +1,13 @@
 package com.example.bloodlink.Login_SignUp_ForgetPassword_Portal;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,7 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,24 +32,52 @@ import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.R;
 import com.example.bloodlink.dashboard.dashboard;
 import com.example.bloodlink.databinding.ActivityMainBinding;
+import com.example.bloodlink.utility.NetworkChangeListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
+    NetworkChangeListener networkChangeListener =new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+        loadLocale();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //languge ko lagi
+        loadLocale();
+        // Make the activity fullscreen and draw under system bars
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.languagechooseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeLanguage();
+            }
+        });
         // Ensure textView5 retains its initial text
         binding.titleTextView.setText("BloodLink");
+
         binding.textView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        binding.emailEditText.setLongClickable(false);
 //        binding.emailEditText.setTextIsSelectable(false);
-        emailFocusListener();
+        phoneFocusListener();
         passwordFocusListener();
 //        binding.textView3.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -91,9 +125,55 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
+    private void changeLanguage() {
+        final String languages[]={"English","नेपाली"};
+        AlertDialog.Builder mBuilder=new AlertDialog.Builder(this);
+        mBuilder.setTitle("Choose Language");
+        mBuilder.setSingleChoiceItems(languages, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(which==0)
+                {
+                    setLocale("");
+                }
+                else if(which==1){
+                    setLocale("ne");//method ho with arr of languge pass
 
-    private void emailFocusListener() {
-        binding.emailEditText.addTextChangedListener(new TextWatcher() {
+                }
+                recreate();
+                dialog.dismiss();
+            }
+
+        });
+        mBuilder.create();
+        mBuilder.show();
+    }
+
+    private void setLocale(String language) {
+        //--------------------------------------------------------------
+        Locale locale=new Locale(language);
+        Locale.setDefault(locale);
+
+        Configuration configuration =new Configuration();
+        configuration.locale=locale;
+        getBaseContext().getResources().updateConfiguration(configuration,getBaseContext().getResources().getDisplayMetrics());
+
+        //langage change vayo------------------------------------------------------
+//shared preferences
+        SharedPreferences.Editor editor=getSharedPreferences("Settings",MODE_PRIVATE).edit();
+        editor.putString("app_lang",language);
+        editor.apply();
+    }
+    //------------------------app reload huda lin locale load hos
+    private void loadLocale(){
+        SharedPreferences preferences=getSharedPreferences("Settings",MODE_PRIVATE);
+        String language=preferences.getString("app_lang","");
+        setLocale(language);
+    }
+
+
+    private void phoneFocusListener() {
+        binding.phoneEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -106,26 +186,25 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
 
 
-                String result = validEmail();
+                String result = validPhone();
                 if (result != null) {
-                    binding.emailContainer.setHelperText(result);
+                    binding.phoneContainer.setHelperText(result);
 
                 } else {
-                    binding.emailContainer.setHelperText("");
+                    binding.phoneContainer.setHelperText("");
                    // Clear error text if email is valid
                 }
             }
         });
     }
 
-    private String validEmail() {
-        String emailText = binding.emailEditText.getText().toString().trim();
-        if (emailText.isEmpty()) {
-            //return "Email cannot be empty";
-            return "";
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
-            //return "Invalid Email Address";
-            return "";
+    private String validPhone() {
+        String phoneText = binding.phoneEditText.getText().toString().trim();
+        if (phoneText.length() != 10) {
+            return "Minimum 10 number";
+        }
+        if (!phoneText.matches(".*[0-9].*")) {
+            return "Must be all Digit";
         }
         return null; // Return null if email is valid
     }
@@ -180,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("username", (binding.emailEditText.getText().toString()));
+            jsonRequest.put("username", (binding.phoneEditText.getText().toString()));
             jsonRequest.put("password", binding.passwordEditText.getText().toString());
         } catch (JSONException e) {
            Log.d("JsonException",e.toString());
@@ -197,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("AuthToken", Token1[0]);
-                    editor.putString("phone",binding.emailEditText.getText().toString());
+                    editor.putString("phone",binding.phoneEditText.getText().toString());
                     editor.apply();
 
 

@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -45,10 +46,12 @@ public class searchdonor extends AppCompatActivity {
     ActivitySearchdonorBinding binding;
     private String requesterId;
     ArrayList<String>arrbloodGroup=new ArrayList<>();
+    ArrayList<String>arrpint=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivitySearchdonorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if(binding.checkBox.isChecked()){
@@ -58,12 +61,13 @@ public class searchdonor extends AppCompatActivity {
         String phoneNo = sharedPreferences.getString("phone",null);
         binding.phone.setText(phoneNo);
         binding.patientNameContainer.setHelperText("");
-        binding.pintContainer.setHelperText("");
         binding.addressContainer.setHelperText("");
+        phoneFocusListner();
         patientNameFocusListener();
-        pintFocusListener();
         addressFocusListener();
-
+        arrpint.add("1");
+        arrpint.add("2");
+        arrpint.add("3");
         arrbloodGroup.add("A+");
         arrbloodGroup.add("AB+");
         arrbloodGroup.add("AB-");
@@ -74,6 +78,8 @@ public class searchdonor extends AppCompatActivity {
 
         ArrayAdapter<String> bloodAdapter=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,arrbloodGroup);
         binding.bloodgroup.setAdapter(bloodAdapter);
+        ArrayAdapter<String>pintAdapter=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,arrpint);
+        binding.pintEditText.setAdapter(pintAdapter);
         binding.btnSearch.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -112,6 +118,44 @@ public class searchdonor extends AppCompatActivity {
         });
 
     }
+
+    private void phoneFocusListner() {
+        binding.phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+                String result = validPhone();
+                if (result != null) {
+                    binding.phoneContainer.setHelperText(result);
+
+                } else {
+                    binding.phoneContainer.setHelperText("");
+                    // Clear error text if email is valid
+                }
+            }
+        });
+    }
+
+    private String validPhone() {
+        String phoneText = binding.phone.getText().toString().trim();
+        if (phoneText.length() != 10) {
+            return "Minimum 10 number";
+        }
+        if (!phoneText.matches(".*[0-9].*")) {
+            return "Must be all Digit";
+        }
+        return null; // Return null if email is valid
+    }
+
     private void patientNameFocusListener() {
         binding.patientNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -144,38 +188,7 @@ public class searchdonor extends AppCompatActivity {
         }
         return null; // Return null if email is valid
     }
-    private void pintFocusListener() {
-        binding.pintEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String result = validPint();
-                if (result != null) {
-                    binding.pintContainer.setHelperText(result);
-
-                } else {
-                    binding.pintContainer.setHelperText("");
-                    // Clear error text if email is valid
-                }
-            }
-        });
-
-    }
-
-    private String validPint() {
-        String pintNumber = binding.pintEditText.getText().toString().trim();
-        if (pintNumber.length()>3) {
-            return "Less than 3 pint is valid";
-        }
-        return null; // Return null if email is valid
-    }
     private void addressFocusListener() {
         binding.addressEditText.addTextChangedListener(new TextWatcher() {
             @Override

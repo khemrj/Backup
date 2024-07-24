@@ -13,9 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="MY PROFILE"
+        android:text="@string/my_profile"
         android:textSize="45dp"
         android:textStyle="bold"
+        android:layout_marginTop="20dp"
         tools:layout_editor_absoluteX="-35dp"
         tools:layout_editor_absoluteY="133dp"
         android:fontFamily="@font/font1"
@@ -92,16 +93,15 @@
 
                     <TextView
                         android:id="@+id/txtAge"
-                        android:layout_width="60dp"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
-                        android:hint="agehere"
                         android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/text4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BloodGroup="
+                        android:text="@string/bloodgroup"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
 
@@ -109,9 +109,7 @@
                         android:id="@+id/txtBloodGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:hint="blood group "
-
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -127,8 +125,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:text="@string/age"
-                        android:textSize="18sp"
+                        android:text="@string/location"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -136,8 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="location"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -147,19 +144,21 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="88dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/type"
-                        android:textSize="25dp"
+                        android:textSize="16dp"
                         android:textStyle="bold" />
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="="
+                        android:textAlignment="center" />
                     <TextView
                         android:id="@+id/txtType"
-                        android:layout_width="151dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:hint="Type"
-                        android:textAlignment="center" />
+                        />
                 </LinearLayout>
 
 

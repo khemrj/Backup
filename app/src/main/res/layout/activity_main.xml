@@ -7,7 +7,51 @@
     android:background="@drawable/background"
     android:orientation="vertical"
     tools:context=".Login_SignUp_ForgetPassword_Portal.MainActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/languagechooseBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            app:cardCornerRadius="7dp"
+            app:cardUseCompatPadding="true"
+            android:clickable="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="7dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:text="@string/en"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginRight="10dp"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_keyboard_arrow_down_24"></ImageView>
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+        <!-- Rest of your layout goes here -->
+
+    </RelativeLayout>
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="156dp"
@@ -20,14 +64,14 @@
 
     <EditText
         android:id="@+id/ipAddress"
-        android:layout_width="312dp"
-        android:layout_height="50dp"
+        android:layout_width="308dp"
+        android:layout_height="45dp"
         android:layout_marginLeft="50dp"
         android:background="@drawable/edit_round"
         android:ems="10"
         android:hint="Enter Ip address"
         android:inputType="text"
-        android:text="192.168.1.69" />
+        android:text="192.168.1.176" />
 
     <TextView
         android:id="@+id/titleTextView"
@@ -38,16 +82,14 @@
         android:textColor="#ffff"
         android:textSize="35dp"
         android:fontFamily="@font/font1"/>
-
-
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailContainer"
+        android:id="@+id/phoneContainer"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         app:boxBackgroundColor="@color/white"
         app:boxStrokeColor="@color/Lightblue"
         app:boxBackgroundMode="filled"
@@ -55,25 +97,28 @@
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
-
-
         app:endIconMode="clear_text"
         app:endIconTint="#2196F3"
-        app:helperText=""
+        app:helperText="@string/required"
+        app:counterEnabled="true"
 
         app:helperTextTextColor="@color/red"
-        app:startIconDrawable="@drawable/baseline_person_24"
-        app:startIconTint="#2196F3">
+        app:startIconDrawable="@drawable/baseline_phone_24"
+        app:startIconTint="#2196F3"
+        app:prefixText="+977"
+        app:counterMaxLength="10"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/phoneEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/phone_number"
-            android:inputType="textEmailAddress"
-            android:lines="1"
-            android:text="9869986779" />
+            android:inputType="phone"
+            android:lines="1" />
     </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -92,8 +137,6 @@
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
 
-        app:counterEnabled="true"
-        app:counterMaxLength="8"
 
         app:endIconMode="password_toggle"
         app:endIconTint="#2196F3"
@@ -109,7 +152,6 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:lines="1"
-            android:maxLength="8"
             android:text="Tero@123" />
     </com.google.android.material.textfield.TextInputLayout>
 

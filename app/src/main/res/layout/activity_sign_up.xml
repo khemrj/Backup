@@ -71,8 +71,7 @@
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="8"
+
 
         app:endIconMode="password_toggle"
         app:endIconTint="#2196F3"
@@ -87,8 +86,7 @@
             android:layout_height="match_parent"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:lines="1"
-            android:maxLength="8"/>
+            android:lines="1" />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/conformPasswordContainer"
@@ -105,8 +103,7 @@
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="8"
+
 
         app:endIconMode="password_toggle"
         app:endIconTint="#2196F3"
@@ -119,10 +116,9 @@
             android:id="@+id/conformPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/conform_password"
+            android:hint="@string/confirm_password"
             android:inputType="textPassword"
-            android:lines="1"
-            android:maxLength="8"/>
+            android:lines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
 

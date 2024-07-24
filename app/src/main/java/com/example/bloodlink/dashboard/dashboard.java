@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.view.WindowCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,6 +29,7 @@ import com.example.bloodlink.databinding.ActivityDashboardBinding;
 import com.example.bloodlink.donorpage.RecyclerDonorAdapter;
 import com.example.bloodlink.donorpage.donorPage;
 import com.example.bloodlink.myprofile.myprofile;
+import com.example.bloodlink.requestedpage.requestlistpage;
 import com.example.bloodlink.searchdonor.searchdonor;
 
 import org.json.JSONArray;
@@ -40,12 +41,23 @@ import java.util.ArrayList;
 public class dashboard extends AppCompatActivity {
 ActivityDashboardBinding binding;
     ImageButton notify;
+    Button requests;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding=ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setIdInSharedPreferences();
+        requests=findViewById(R.id.requests);
+        requests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(dashboard.this, requestlistpage.class);
+                startActivity(intent);
+            }
+        });
+
 
         notify = findViewById(R.id.notification);
         notify.setOnClickListener(new View.OnClickListener() {

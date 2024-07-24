@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,13 +30,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.R;
 import com.example.bloodlink.dashboard.dashboard;
 import com.example.bloodlink.databinding.ActivityMapsBinding;
-import com.example.bloodlink.searchdonor.GeoCodeLocation;
-import com.example.bloodlink.searchdonor.searchdonor;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.GoogleMap;
 
@@ -60,9 +59,9 @@ public class becomeadonor extends AppCompatActivity {
 
     DatePickerDialog.OnDateSetListener setListener;
 
-    CheckBox checkBox;
-    EditText fullName, address,lastdonatedtime,dob;
-    Button button, cancel;
+
+    EditText firstName,middleName,lastName, address,lastdonatedtime,dob,lastDate;
+    Button updatebtn, cancelbtn,update,cancel;
     TextView DOB;
     AutoCompleteTextView bloodGroup, gender;
 
@@ -75,27 +74,27 @@ public class becomeadonor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_becomeadonor);
-
         dob = findViewById(R.id.dob);
-        fullName = findViewById(R.id.fullName);
+        firstName= findViewById(R.id.firstName);
+        middleName=findViewById(R.id.middleName);
+        lastName=findViewById(R.id.lastName);
         // bloodGroup = findViewById(R.id.bloodGroup);
         address = findViewById(R.id.address);
         lastdonatedtime = findViewById(R.id.lastDate);
         gender = findViewById(R.id.gender);
-        checkBox = findViewById(R.id.checkBox);
 
 
-        button = findViewById(R.id.update);
-        button.setOnClickListener(new View.OnClickListener() {
+        updatebtn = findViewById(R.id.update);
+        updatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-        cancel = findViewById(R.id.cancel);
+        cancelbtn = findViewById(R.id.cancel);
         bloodGroup = findViewById(R.id.bloodGroup);
 
-
+        dob.setInputType(InputType.TYPE_CLASS_DATETIME);
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +104,7 @@ public class becomeadonor extends AppCompatActivity {
 
                 // on below line we are getting
                 // our day, month and year.
-                int year = c.get(Calendar.YEAR);
+               int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
@@ -132,7 +131,7 @@ public class becomeadonor extends AppCompatActivity {
 
 
         //checkbox ko lagi
-        button.setOnClickListener(new View.OnClickListener() {
+        updatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Address = address.getText().toString();
@@ -147,39 +146,47 @@ public class becomeadonor extends AppCompatActivity {
                 locationAddress.getAddressFromLocation(address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
 
                 // Check if the checkbox is checked
-                if (checkBox.isChecked()) {
+//                if (checkBox.isChecked()) {
                     // Check if all EditText fields are filled
                     //  int dayOfMonth = 0;
                     // int monthOfYear=0;
                     // int year = 0;
                     //String D= dob.getText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year).toString();
                     // int s=Integer.parseInt(D);
-                    String dobText = dob.getText().toString().trim(); // Trim to remove leading/trailing spaces
-                    if (isEditTextFilled(fullName) &&
+                    String dobText = dob.getText().toString().trim();// Trim to remove leading/trailing spaces
+                    if (isEditTextFilled(firstName) &&
+                            isEditTextFilled(lastName)&&
                             isEditTextFilled(bloodGroup) &&
                             isEditTextFilled(address) &&
                             !dobText.isEmpty() &&
+                            isEditTextFilled(lastdonatedtime)&&
                             isEditTextFilled(gender)) {
                         // ------All fields are filled, show success message OR DATABASE HALNU
 
                         // Clear all EditText fields
-                        fullName.getText().clear();
+                        firstName.getText().clear();
+                        middleName.getText().clear();
+                        lastName.getText().clear();
                         bloodGroup.getText().clear();
                         address.getText().clear();
 
                         gender.getText().clear();
                         dob.setText("");
+                        lastdonatedtime.setText("");
+
+
+
                     } else {
                         // At least one field is empty, show an error message
                         Toast.makeText(becomeadonor.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    // Checkbox is not checked, show a message
-                    Toast.makeText(becomeadonor.this, "Please check the 'Become a Donor' checkbox.", Toast.LENGTH_SHORT).show();
-                }
+//                } else {
+//                    // Checkbox is not checked, show a message
+//                    Toast.makeText(becomeadonor.this, "Please check the 'Become a Donor' checkbox.", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
-        cancel.setOnClickListener(new View.OnClickListener() {
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(becomeadonor.this, dashboard.class);
@@ -220,9 +227,9 @@ public class becomeadonor extends AppCompatActivity {
         String URL = sharedPreferences.getString("URL", null);
         String url = URL +"/api/v1/members";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
         JSONObject jsonRequest = new JSONObject();
         try {
-            JSONObject memberObject = new JSONObject();
             jsonRequest.put("firstname",fullName.getText() );
             jsonRequest.put("middlename", "Kumar");
             jsonRequest.put("lastname", "Chaudhary");

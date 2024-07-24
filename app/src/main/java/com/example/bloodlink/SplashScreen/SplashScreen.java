@@ -1,6 +1,7 @@
 package com.example.bloodlink.SplashScreen;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,21 +18,25 @@ Runnable runnable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_splash_screen);
         lottieAnimationView=findViewById(R.id.animationView);
 
         runnable=new Runnable() {
             @Override
             public void run() {
+                // Start the Lottie animation
             lottieAnimationView.playAnimation();
                 Intent i =new Intent(SplashScreen.this, MainActivity.class);
                 startActivity(i);
                 finish();
             }
         };
-        handler.postDelayed(runnable,3000);
-
-
-
+        handler.postDelayed(runnable,5000);
+    }
+    @Override//remove call back when activity is destroyed
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 }

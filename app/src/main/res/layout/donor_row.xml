@@ -17,6 +17,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:cardCornerRadius="7dp"
         app:cardUseCompatPadding="true"
         app:cardElevation="16dp">
@@ -78,14 +79,14 @@
 
                     <TextView
                         android:id="@+id/txtAge"
-                        android:layout_width="85dp"
+                        android:layout_width="58dp"
                         android:layout_height="wrap_content"
 
                         android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/text4"
-                        android:layout_width="wrap_content"
+                        android:layout_width="99dp"
                         android:layout_height="wrap_content"
                         android:text="@string/bloodgroup"
                         android:textSize="16sp"
@@ -93,7 +94,7 @@
 
                     <TextView
                         android:id="@+id/txtBloodGroup"
-                        android:layout_width="wrap_content"
+                        android:layout_width="67dp"
                         android:layout_height="match_parent"
 
                         android:textSize="16sp" />

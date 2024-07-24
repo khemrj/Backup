@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.example.bloodlink.R;
 import com.example.bloodlink.becomeadonor.becomeadonor;
@@ -20,6 +21,7 @@ Button button2;//declaration for button2
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_myprofile);
         txtName=findViewById(R.id.txtName);
         txtAge=findViewById(R.id.txtAge);
