@@ -13,9 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="MY PROFILE"
+        android:text="@string/my_profile"
         android:textSize="45dp"
         android:textStyle="bold"
+        android:layout_marginTop="20dp"
         tools:layout_editor_absoluteX="-35dp"
         tools:layout_editor_absoluteY="133dp"
         android:fontFamily="@font/font1"
@@ -92,7 +93,7 @@
 
                     <TextView
                         android:id="@+id/txtAge"
-                        android:layout_width="60dp"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp" />
 
@@ -100,7 +101,7 @@
                         android:id="@+id/text4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BloodGroup="
+                        android:text="@string/bloodgroup"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
 

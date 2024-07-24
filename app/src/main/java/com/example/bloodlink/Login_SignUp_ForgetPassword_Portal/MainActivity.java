@@ -1,9 +1,11 @@
 package com.example.bloodlink.Login_SignUp_ForgetPassword_Portal;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -17,7 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkChangeListener, filter);
         super.onStart();
+        loadLocale();
     }
 
     @Override
@@ -56,8 +62,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //languge ko lagi
+        loadLocale();
+        // Make the activity fullscreen and draw under system bars
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.languagechooseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeLanguage();
+            }
+        });
         // Ensure textView5 retains its initial text
         binding.titleTextView.setText("BloodLink");
 
@@ -106,6 +123,52 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+    }
+
+    private void changeLanguage() {
+        final String languages[]={"English","नेपाली"};
+        AlertDialog.Builder mBuilder=new AlertDialog.Builder(this);
+        mBuilder.setTitle("Choose Language");
+        mBuilder.setSingleChoiceItems(languages, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(which==0)
+                {
+                    setLocale("");
+                }
+                else if(which==1){
+                    setLocale("ne");//method ho with arr of languge pass
+
+                }
+                recreate();
+                dialog.dismiss();
+            }
+
+        });
+        mBuilder.create();
+        mBuilder.show();
+    }
+
+    private void setLocale(String language) {
+        //--------------------------------------------------------------
+        Locale locale=new Locale(language);
+        Locale.setDefault(locale);
+
+        Configuration configuration =new Configuration();
+        configuration.locale=locale;
+        getBaseContext().getResources().updateConfiguration(configuration,getBaseContext().getResources().getDisplayMetrics());
+
+        //langage change vayo------------------------------------------------------
+//shared preferences
+        SharedPreferences.Editor editor=getSharedPreferences("Settings",MODE_PRIVATE).edit();
+        editor.putString("app_lang",language);
+        editor.apply();
+    }
+    //------------------------app reload huda lin locale load hos
+    private void loadLocale(){
+        SharedPreferences preferences=getSharedPreferences("Settings",MODE_PRIVATE);
+        String language=preferences.getString("app_lang","");
+        setLocale(language);
     }
 
 

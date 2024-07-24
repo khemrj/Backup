@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -71,6 +72,7 @@ public class becomeadonor extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_becomeadonor);
         dob = findViewById(R.id.dob);
         firstName= findViewById(R.id.firstName);
@@ -182,7 +184,6 @@ public class becomeadonor extends AppCompatActivity {
                     // int s=Integer.parseInt(D);
                     String dobText = dob.getText().toString().trim();// Trim to remove leading/trailing spaces
                     if (isEditTextFilled(firstName) &&
-                            isEditTextFilled(middleName)&&
                             isEditTextFilled(lastName)&&
                             isEditTextFilled(bloodGroup) &&
                             isEditTextFilled(address) &&

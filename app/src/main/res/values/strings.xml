@@ -5,7 +5,7 @@
     <string name="email">Email\n</string>
     <string name="password">Password\n</string>
     <string name="phone_number">Phone Number\n</string>
-    <string name="conform_password">Conform Password\n</string>
+    <string name="confirm_password">Confirm Password\n</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
     <string name="forget_password">Forget Password\n</string>
@@ -29,4 +29,11 @@
     <string name="last_name">Last Name\n</string>
     <string name="dob">Date of birth</string>
     <string name="last_donated_date">Last donated Date</string>
+    <string name="en">EN</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="request_blood">REQUEST BLOOD</string>
+    <string name="my_profile">MY PROFILE</string>
+    <string name="become_a_donor_C">BECOME A DONOR</string>
+    <string name="CANCEL_1">CANCEL</string>
+
 </resources>
