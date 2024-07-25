@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(MainActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-                Log.d("volleyError", error.toString());
+               // Log.d("volleyError", error.toString());
             }
         });
 

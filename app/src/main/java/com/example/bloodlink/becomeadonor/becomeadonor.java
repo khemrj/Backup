@@ -30,6 +30,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.R;
 import com.example.bloodlink.dashboard.dashboard;
@@ -49,7 +50,7 @@ import java.util.Map;
 public class becomeadonor extends AppCompatActivity {
     private String latLong;
     private String id;
-    private String firstName,middleName,lastName,stringBloodGroup,dateOfBirth,registrationDate,stringGender,stringLastDonatedDate;
+    private String firstName,middleName,lastName,bloodGroup,dob,registrationDate,gender,lastDonatedDate;
     private String Address;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -60,10 +61,10 @@ public class becomeadonor extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener setListener;
 
 
-    EditText firstName,middleName,lastName, address,lastdonatedtime,dob,lastDate;
+    EditText et_firstName,et_middleName,et_lastName, rt_address,et_lastdonatedDate,et_dob,lastDate,et_address;
     Button updatebtn, cancelbtn,update,cancel;
     TextView DOB;
-    AutoCompleteTextView bloodGroup, gender;
+    AutoCompleteTextView tv_bloodGroup, tv_gender;
 
 
     ArrayList<String> arblood = new ArrayList<>();
@@ -74,14 +75,14 @@ public class becomeadonor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_becomeadonor);
-        dob = findViewById(R.id.dob);
-        firstName= findViewById(R.id.firstName);
-        middleName=findViewById(R.id.middleName);
-        lastName=findViewById(R.id.lastName);
+        et_dob = findViewById(R.id.dob);
+        et_firstName= findViewById(R.id.firstName);
+        et_middleName=findViewById(R.id.middleName);
+        et_lastName=findViewById(R.id.lastName);
         // bloodGroup = findViewById(R.id.bloodGroup);
-        address = findViewById(R.id.address);
-        lastdonatedtime = findViewById(R.id.lastDate);
-        gender = findViewById(R.id.gender);
+        et_address = findViewById(R.id.address);
+        et_lastdonatedDate = findViewById(R.id.lastDate);
+        tv_gender = findViewById(R.id.gender);
 
 
         updatebtn = findViewById(R.id.update);
@@ -92,10 +93,11 @@ public class becomeadonor extends AppCompatActivity {
             }
         });
         cancelbtn = findViewById(R.id.cancel);
-        bloodGroup = findViewById(R.id.bloodGroup);
+        tv_bloodGroup = findViewById(R.id.bloodGroup);
 
-        dob.setInputType(InputType.TYPE_CLASS_DATETIME);
-        dob.setOnClickListener(new View.OnClickListener() {
+        et_dob.setInputType(InputType.TYPE_CLASS_DATETIME);
+        et_lastdonatedDate.setInputType(InputType.TYPE_CLASS_DATETIME);
+        et_dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // on below line we are getting
@@ -116,7 +118,40 @@ public class becomeadonor extends AppCompatActivity {
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
                         // on below line we are setting date to our edit text.
                         // dob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                        dob.setText(year + "/" + monthOfYear + "/" + dayOfMonth);
+                        et_dob.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+                    }
+                },
+                        // on below line we are passing year,
+                        // month and day for selected date in our date picker.
+                        year, month, day);
+                // at last we are calling show to
+                // display our date picker dialog.
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                datePickerDialog.show();
+            }
+        });
+        et_lastdonatedDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // on below line we are getting
+                // the instance of our calendar.
+                final Calendar c = Calendar.getInstance();
+
+                // on below line we are getting
+                // our day, month and year.
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // on below line we are creating a variable for date picker dialog.
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        // on below line we are passing context.
+                        becomeadonor.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+                        // on below line we are setting date to our edit text.
+                        // dob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                        et_lastdonatedDate.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
                     }
                 },
                         // on below line we are passing year,
@@ -130,20 +165,20 @@ public class becomeadonor extends AppCompatActivity {
         });
 
 
-        //checkbox ko lagi
         updatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Address = address.getText().toString();
-//                firstName = et_firstName.getText().toString();
-//                middleName = et_middleName.getText().toString();
-//                lastName = et_lastName.getText().toString();
-                stringBloodGroup = bloodGroup.getText().toString();
-                dateOfBirth = dob.getText().toString();
+                Address = et_address.getText().toString();
+                firstName = et_firstName.getText().toString();
+                middleName = et_middleName.getText().toString();
+                lastName = et_lastName.getText().toString();
+                bloodGroup = tv_bloodGroup.getText().toString();
+                dob = et_dob.getText().toString();
+                lastDonatedDate = et_lastdonatedDate.getText().toString();
                // registrationDate =  ;
-                stringGender = gender.getText().toString();
+                gender = tv_gender.getText().toString();
                 GeoCodeLocation locationAddress = new GeoCodeLocation();
-                locationAddress.getAddressFromLocation(address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
+                locationAddress.getAddressFromLocation(et_address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
 
                 // Check if the checkbox is checked
 //                if (checkBox.isChecked()) {
@@ -153,26 +188,26 @@ public class becomeadonor extends AppCompatActivity {
                     // int year = 0;
                     //String D= dob.getText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year).toString();
                     // int s=Integer.parseInt(D);
-                    String dobText = dob.getText().toString().trim();// Trim to remove leading/trailing spaces
-                    if (isEditTextFilled(firstName) &&
-                            isEditTextFilled(lastName)&&
-                            isEditTextFilled(bloodGroup) &&
-                            isEditTextFilled(address) &&
+                    String dobText = et_dob.getText().toString().trim();// Trim to remove leading/trailing spaces
+                    if (isEditTextFilled(et_firstName) &&
+                            isEditTextFilled(et_lastName)&&
+                            isEditTextFilled(tv_bloodGroup) &&
+                            isEditTextFilled(et_address) &&
                             !dobText.isEmpty() &&
-                            isEditTextFilled(lastdonatedtime)&&
-                            isEditTextFilled(gender)) {
+                            isEditTextFilled(et_lastdonatedDate)&&
+                            isEditTextFilled(tv_gender)) {
                         // ------All fields are filled, show success message OR DATABASE HALNU
 
                         // Clear all EditText fields
-                        firstName.getText().clear();
-                        middleName.getText().clear();
-                        lastName.getText().clear();
-                        bloodGroup.getText().clear();
-                        address.getText().clear();
+                        et_firstName.getText().clear();
+                        et_middleName.getText().clear();
+                        et_lastName.getText().clear();
+                        tv_bloodGroup.getText().clear();
+                        et_address.getText().clear();
 
-                        gender.getText().clear();
-                        dob.setText("");
-                        lastdonatedtime.setText("");
+                        tv_gender.getText().clear();
+                        et_dob.setText("");
+                        et_lastdonatedDate.setText("");
 
 
 
@@ -203,14 +238,14 @@ public class becomeadonor extends AppCompatActivity {
         arblood.add("O+");
 
         ArrayAdapter<String> bloodAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, arblood);
-        bloodGroup.setAdapter(bloodAdapter);
+        tv_bloodGroup.setAdapter(bloodAdapter);
 
         //---------------------gender
         argender.add("Male");
         argender.add("Female");
         argender.add("Other");
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, argender);
-        gender.setAdapter(genderAdapter);
+        tv_gender.setAdapter(genderAdapter);
     }
 
     // Helper function to check if an EditText is filled
@@ -230,13 +265,13 @@ public class becomeadonor extends AppCompatActivity {
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("firstname",fullName.getText() );
-            jsonRequest.put("middlename", "Kumar");
-            jsonRequest.put("lastname", "Chaudhary");
-            jsonRequest.put("dateOfBirth", dob.getText());
-            jsonRequest.put("bloodGroup", bloodGroup.getText());
-            jsonRequest.put("gender", gender.getText());
-            jsonRequest.put("lastTimeOfDonation", lastdonatedtime.getText());
+            jsonRequest.put("firstname",firstName );
+            jsonRequest.put("middlename", middleName);
+            jsonRequest.put("lastname", lastName);
+            jsonRequest.put("dateOfBirth", dob);
+            jsonRequest.put("bloodGroup", bloodGroup);
+            jsonRequest.put("gender", gender);
+            jsonRequest.put("lastTimeOfDonation", lastDonatedDate);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 jsonRequest.put("registrationDate", LocalDate.now());
             }

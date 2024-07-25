@@ -44,6 +44,7 @@ import java.util.Random;
 public class searchdonor extends AppCompatActivity {
 
     ActivitySearchdonorBinding binding;
+    String stringBloodGroup,stringName,stringpints,stringPhone;
     private String requesterId;
     ArrayList<String>arrbloodGroup=new ArrayList<>();
     ArrayList<String>arrpint=new ArrayList<>();
@@ -84,8 +85,13 @@ public class searchdonor extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                stringBloodGroup = binding.bloodgroup.getText().toString();
+                stringpints = binding.pintEditText.getText().toString();
+                stringName = binding.patientNameEditText.getText().toString();
+                stringPhone=binding.phone.getText().toString();
+                GeoCodeLocation locationAddress = new GeoCodeLocation();
+                locationAddress.getAddressFromLocation(binding.addressEditText.getText().toString(), getApplicationContext(), new GeoCoderHandler());
 
-                RequestBlood();
                 //geocode
 
 //                if(binding.checkBox.isChecked())
@@ -221,26 +227,21 @@ public class searchdonor extends AppCompatActivity {
         }
         return null; // Return null if email is valid
     }
-    public void RequestBlood() {
-
-        GeoCodeLocation locationAddress = new GeoCodeLocation();
-        locationAddress.getAddressFromLocation(binding.addressEditText.getText().toString(), getApplicationContext(), new GeoCoderHandler());
+    public void RequestBlood(String lat, String lon) {
 
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferences.getString("URL", null);
-        String lat = sharedPreferences.getString("latitudeSearch",null);
-        String lon = sharedPreferences.getString("longitudeSearch",null);
         String url = URL +"/api/v1/requesters";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("bloodGroup",binding.bloodgroup.getText());
+            jsonRequest.put("bloodGroup",stringBloodGroup);
             jsonRequest.put("latitude",lat);
-            jsonRequest.put("name","khem");
+            jsonRequest.put("name",stringName);
             jsonRequest.put("longitude", lon);
-            jsonRequest.put("phone", binding.phone.getText());
-            jsonRequest.put("pints", binding.pintEditText.getText());
+            jsonRequest.put("phone", stringPhone);
+            jsonRequest.put("pints", stringpints);
             JSONObject memberLocationObject = new JSONObject();
             memberLocationObject.put("latitude",lat);
             memberLocationObject.put("longitude",lon);
@@ -300,14 +301,11 @@ public class searchdonor extends AppCompatActivity {
                 default:
                     locationAddress = null;
             }
-            SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+
             String[] parts = locationAddress.split(" ");
-            editor.putString("latitudeSearch",parts[0]);
-            editor.putString("longitudeSearch",parts[1]);
-            editor.apply();
 
 
+            RequestBlood(parts[0],parts[1]);
             Log.d("Location1",locationAddress);
 
         }
@@ -334,7 +332,6 @@ public class searchdonor extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

@@ -32,7 +32,7 @@ Runnable runnable;
                 finish();
             }
         };
-        handler.postDelayed(runnable,5000);
+        handler.postDelayed(runnable,1700);
     }
     @Override//remove call back when activity is destroyed
     protected void onDestroy() {

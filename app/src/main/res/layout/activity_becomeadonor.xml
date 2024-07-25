@@ -270,7 +270,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/last_donated_date"
-                    android:inputType="none"
                     android:lines="1"
                     app:autoSizeMaxTextSize="100sp"
                     app:autoSizeMinTextSize="12sp"
