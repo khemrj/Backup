@@ -48,7 +48,7 @@ ActivityDashboardBinding binding;
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding=ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setIdInSharedPreferences();
+
         requests=findViewById(R.id.requests);
         requests.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +63,7 @@ ActivityDashboardBinding binding;
         notify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent i = new Intent(dashboard.this, donorPage.class);
                 startActivity(i);
             }
@@ -78,6 +79,7 @@ ActivityDashboardBinding binding;
         binding.requested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setIdInSharedPreferences();
                 Intent intent=new Intent(dashboard.this, searchdonor.class);
                 startActivity(intent);
             }
@@ -93,6 +95,7 @@ ActivityDashboardBinding binding;
 
     }
     public void setIdInSharedPreferences(){
+        Log.d("kkk","functionCalled");
         SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
         String phone = sharedPreferences.getString("phone",null);
         SharedPreferences sharedPreferencesurl = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
@@ -107,7 +110,7 @@ ActivityDashboardBinding binding;
                     public void onResponse(String response) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("userId",response);
-                        Log.d("userdindash",response);
+                        Log.d("userIdInDash",response);
                        editor.apply();
                     }
                 },
@@ -120,8 +123,8 @@ ActivityDashboardBinding binding;
                 }
         );
 
-        // Add the request to the RequestQueue
         requestQueue.add(jsonArrayRequest);
+        Log.d("ll","requested queed");
 
     }
     }

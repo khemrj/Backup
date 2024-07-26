@@ -45,7 +45,7 @@ public class searchdonor extends AppCompatActivity {
 
     ActivitySearchdonorBinding binding;
     String stringBloodGroup,stringName,stringpints,stringPhone;
-    private String requesterId;
+    private String requesterId,universalLocation;
     ArrayList<String>arrbloodGroup=  new ArrayList<>();
     ArrayList<String>arrpint=new ArrayList<>();
 
@@ -265,10 +265,13 @@ public class searchdonor extends AppCompatActivity {
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
-
-                Intent intent = new Intent(searchdonor.this,dlist.class);
-                // This Token has null value but why??
-                startActivity(intent);
+               if(!universalLocation.isEmpty()){
+                   Intent intent = new Intent(searchdonor.this,dlist.class);
+                   startActivity(intent);
+            }
+               else {
+                   Toast.makeText(searchdonor.this, "Please Enter correct Address", Toast.LENGTH_SHORT).show();
+               }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -309,10 +312,14 @@ public class searchdonor extends AppCompatActivity {
             }
 
             String[] parts = locationAddress.split(" ");
+            universalLocation = locationAddress;
 
+            if(!locationAddress.isEmpty()){
+            RequestBlood(parts[0],parts[1]);}
+                else{
+                    Toast.makeText(searchdonor.this, "Please Enter correct Address", Toast.LENGTH_SHORT).show();
+                }
 
-            RequestBlood(parts[0],parts[1]);
-            Log.d("Location1",locationAddress);
 
         }
 
