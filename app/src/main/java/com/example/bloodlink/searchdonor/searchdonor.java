@@ -351,12 +351,8 @@ public class searchdonor extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
-//                Intent i = getIntent();
-//                String Token = i.getStringExtra("Token");
                 SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
                 String Token = sharedPreferences.getString("AuthToken", null);
-                Log.d("BeDonorTokeninheader",Token);
-
                 headers.put("Content-Type", "application/json");
                 headers.put("Authorization", "Bearer "+Token);
 

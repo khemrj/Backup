@@ -270,18 +270,14 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     Token1[0] = response.getString("accessToken");
-
                     Log.d("loginresponse",response.toString());
                     //SharedPreferences to save Token to be accessed by many activities
                     SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("AuthToken", Token1[0]);
                     editor.putString("phone",binding.phoneEditText.getText().toString());
+                    Log.d("phone is ",binding.phoneEditText.getText().toString() );
                     editor.apply();
-
-
-
-
                    // Token token = new Token();
                    // token.setToken(Token1[0]);
                     Intent intent=new Intent(MainActivity.this, dashboard.class);

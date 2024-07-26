@@ -98,8 +98,6 @@ ActivityDashboardBinding binding;
         SharedPreferences sharedPreferencesurl = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferencesurl.getString("URL", null);
         String url = URL +"/api/v1/user/getId/" + phone;
-
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest jsonArrayRequest = new StringRequest(
                 Request.Method.GET,
@@ -109,6 +107,7 @@ ActivityDashboardBinding binding;
                     public void onResponse(String response) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("userId",response);
+                        Log.d("userdindash",response);
                        editor.apply();
                     }
                 },

@@ -116,9 +116,11 @@ public class becomeadonor extends AppCompatActivity {
                         becomeadonor.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+
                         // on below line we are setting date to our edit text.
+                      String formatedDate =  String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth);
                         // dob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                        et_dob.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+                        et_dob.setText(formatedDate);
                     }
                 },
                         // on below line we are passing year,
@@ -151,7 +153,8 @@ public class becomeadonor extends AppCompatActivity {
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
                         // on below line we are setting date to our edit text.
                         // dob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                        et_lastdonatedDate.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+                        String formatedDate =  String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth);
+                        et_lastdonatedDate.setText(formatedDate);
                     }
                 },
                         // on below line we are passing year,
@@ -256,6 +259,7 @@ public class becomeadonor extends AppCompatActivity {
     public void becomeDonor() {
         SharedPreferences sharedPreferencesauth = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
         String userId = sharedPreferencesauth.getString("userId",null);
+        Log.d("userId is", " " +userId);
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String latitude = sharedPreferences.getString("latitude",null);
         String longitude = sharedPreferences.getString("longitude",null);
@@ -344,7 +348,6 @@ public class becomeadonor extends AppCompatActivity {
             editor.putString("latitude",parts[0]);
             editor.putString("longitude",parts[1]);
             editor.apply();
-
             becomeDonor();
             Log.d("Location1",locationAddress);
 
