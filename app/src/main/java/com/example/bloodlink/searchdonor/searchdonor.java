@@ -46,7 +46,7 @@ public class searchdonor extends AppCompatActivity {
     ActivitySearchdonorBinding binding;
     String stringBloodGroup,stringName,stringpints,stringPhone;
     private String requesterId;
-    ArrayList<String>arrbloodGroup=new ArrayList<>();
+    ArrayList<String>arrbloodGroup=  new ArrayList<>();
     ArrayList<String>arrpint=new ArrayList<>();
 
     @Override
@@ -230,6 +230,8 @@ public class searchdonor extends AppCompatActivity {
     public void RequestBlood(String lat, String lon) {
 
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferencesauth = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+       String userId = sharedPreferencesauth.getString("userId",null);
         String URL = sharedPreferences.getString("URL", null);
         String url = URL +"/api/v1/requesters";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -243,9 +245,13 @@ public class searchdonor extends AppCompatActivity {
             jsonRequest.put("phone", stringPhone);
             jsonRequest.put("pints", stringpints);
             JSONObject memberLocationObject = new JSONObject();
+            JSONObject userInfoObject = new JSONObject();
             memberLocationObject.put("latitude",lat);
+            userInfoObject.put("id",userId);
             memberLocationObject.put("longitude",lon);
             jsonRequest.put("memberLocation",memberLocationObject);
+            jsonRequest.put("userInfo",userInfoObject);
+            Log.d("requesterJsonObject is",jsonRequest.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
