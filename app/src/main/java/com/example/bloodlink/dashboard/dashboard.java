@@ -47,6 +47,7 @@ ActivityDashboardBinding binding;
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding=ActivityDashboardBinding.inflate(getLayoutInflater());
+        setIdInSharedPreferences();
         setContentView(binding.getRoot());
 
         requests=findViewById(R.id.requests);
@@ -79,7 +80,7 @@ ActivityDashboardBinding binding;
         binding.requested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setIdInSharedPreferences();
+
                 Intent intent=new Intent(dashboard.this, searchdonor.class);
                 startActivity(intent);
             }

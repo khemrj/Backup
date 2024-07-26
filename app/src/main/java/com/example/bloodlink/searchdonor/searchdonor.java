@@ -262,6 +262,7 @@ public class searchdonor extends AppCompatActivity {
                 Log.d("RequesterResponse",response.toString());
                 try {
                    requesterId = response.getString("id");
+                   saveToRequestTable(requesterId);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -375,6 +376,41 @@ public class searchdonor extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
 
+    }
+    public void saveToRequestTable(String requesterId){
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL +"/api/requests/send/"+requesterId;
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                Toast.makeText(searchdonor.this, "request sent to nearest Donors", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("volleyError", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
     }
 }
 
