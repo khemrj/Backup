@@ -30,6 +30,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bloodlink.R;
 import com.example.bloodlink.dashboard.dashboard;
@@ -49,6 +50,7 @@ import java.util.Map;
 public class becomeadonor extends AppCompatActivity {
     private String latLong;
     private String id;
+    private String firstName,middleName,lastName,bloodGroup,dob,registrationDate,gender,lastDonatedDate;
     private String Address;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -59,10 +61,10 @@ public class becomeadonor extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener setListener;
 
 
-    EditText firstName,middleName,lastName, address,lastdonatedtime,dob,lastDate;
+    EditText et_firstName,et_middleName,et_lastName, rt_address,et_lastdonatedDate,et_dob,lastDate,et_address;
     Button updatebtn, cancelbtn,update,cancel;
     TextView DOB;
-    AutoCompleteTextView bloodGroup, gender;
+    AutoCompleteTextView tv_bloodGroup, tv_gender;
 
 
     ArrayList<String> arblood = new ArrayList<>();
@@ -72,16 +74,15 @@ public class becomeadonor extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_becomeadonor);
-        dob = findViewById(R.id.dob);
-        firstName= findViewById(R.id.firstName);
-        middleName=findViewById(R.id.middleName);
-        lastName=findViewById(R.id.lastName);
+        et_dob = findViewById(R.id.dob);
+        et_firstName= findViewById(R.id.firstName);
+        et_middleName=findViewById(R.id.middleName);
+        et_lastName=findViewById(R.id.lastName);
         // bloodGroup = findViewById(R.id.bloodGroup);
-        address = findViewById(R.id.address);
-        lastdonatedtime = findViewById(R.id.lastDate);
-        gender = findViewById(R.id.gender);
+        et_address = findViewById(R.id.address);
+        et_lastdonatedDate = findViewById(R.id.lastDate);
+        tv_gender = findViewById(R.id.gender);
 
 
         updatebtn = findViewById(R.id.update);
@@ -92,10 +93,11 @@ public class becomeadonor extends AppCompatActivity {
             }
         });
         cancelbtn = findViewById(R.id.cancel);
-        bloodGroup = findViewById(R.id.bloodGroup);
+        tv_bloodGroup = findViewById(R.id.bloodGroup);
 
-        dob.setInputType(InputType.TYPE_CLASS_DATETIME);
-        dob.setOnClickListener(new View.OnClickListener() {
+        et_dob.setInputType(InputType.TYPE_CLASS_DATETIME);
+        et_lastdonatedDate.setInputType(InputType.TYPE_CLASS_DATETIME);
+        et_dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // on below line we are getting
@@ -114,9 +116,11 @@ public class becomeadonor extends AppCompatActivity {
                         becomeadonor.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+
                         // on below line we are setting date to our edit text.
+                      String formatedDate =  String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth);
                         // dob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                        dob.setText(year + "/" + monthOfYear + "/" + dayOfMonth);
+                        et_dob.setText(formatedDate);
                     }
                 },
                         // on below line we are passing year,
@@ -126,12 +130,9 @@ public class becomeadonor extends AppCompatActivity {
                 // display our date picker dialog.
                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
                 datePickerDialog.show();
-                // After the DatePickerDialog is dismissed, set the input type to TYPE_NULL
-                dob.setInputType(InputType.TYPE_NULL);
             }
         });
-        lastdonatedtime.setInputType(InputType.TYPE_CLASS_DATETIME);
-        lastdonatedtime.setOnClickListener(new View.OnClickListener() {
+        et_lastdonatedDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // on below line we are getting
@@ -152,7 +153,8 @@ public class becomeadonor extends AppCompatActivity {
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
                         // on below line we are setting date to our edit text.
                         // dob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                        lastdonatedtime.setText(year + "/" + monthOfYear + "/" + dayOfMonth);
+                        String formatedDate =  String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth);
+                        et_lastdonatedDate.setText(formatedDate);
                     }
                 },
                         // on below line we are passing year,
@@ -162,17 +164,24 @@ public class becomeadonor extends AppCompatActivity {
                 // display our date picker dialog.
                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
                 datePickerDialog.show();
-                lastdonatedtime.setInputType(InputType.TYPE_NULL);
             }
         });
 
 
-        //checkbox ko lagi
         updatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Address = address.getText().toString();
-                becomeDonor();
+                Address = et_address.getText().toString();
+                firstName = et_firstName.getText().toString();
+                middleName = et_middleName.getText().toString();
+                lastName = et_lastName.getText().toString();
+                bloodGroup = tv_bloodGroup.getText().toString();
+                dob = et_dob.getText().toString();
+                lastDonatedDate = et_lastdonatedDate.getText().toString();
+               // registrationDate =  ;
+                gender = tv_gender.getText().toString();
+                GeoCodeLocation locationAddress = new GeoCodeLocation();
+                locationAddress.getAddressFromLocation(et_address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
 
                 // Check if the checkbox is checked
 //                if (checkBox.isChecked()) {
@@ -182,26 +191,26 @@ public class becomeadonor extends AppCompatActivity {
                     // int year = 0;
                     //String D= dob.getText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year).toString();
                     // int s=Integer.parseInt(D);
-                    String dobText = dob.getText().toString().trim();// Trim to remove leading/trailing spaces
-                    if (isEditTextFilled(firstName) &&
-                            isEditTextFilled(lastName)&&
-                            isEditTextFilled(bloodGroup) &&
-                            isEditTextFilled(address) &&
+                    String dobText = et_dob.getText().toString().trim();// Trim to remove leading/trailing spaces
+                    if (isEditTextFilled(et_firstName) &&
+                            isEditTextFilled(et_lastName)&&
+                            isEditTextFilled(tv_bloodGroup) &&
+                            isEditTextFilled(et_address) &&
                             !dobText.isEmpty() &&
-                            isEditTextFilled(lastdonatedtime)&&
-                            isEditTextFilled(gender)) {
+                            isEditTextFilled(et_lastdonatedDate)&&
+                            isEditTextFilled(tv_gender)) {
                         // ------All fields are filled, show success message OR DATABASE HALNU
 
                         // Clear all EditText fields
-                        firstName.getText().clear();
-                        middleName.getText().clear();
-                        lastName.getText().clear();
-                        bloodGroup.getText().clear();
-                        address.getText().clear();
+                        et_firstName.getText().clear();
+                        et_middleName.getText().clear();
+                        et_lastName.getText().clear();
+                        tv_bloodGroup.getText().clear();
+                        et_address.getText().clear();
 
-                        gender.getText().clear();
-                        dob.setText("");
-                        lastdonatedtime.setText("");
+                        tv_gender.getText().clear();
+                        et_dob.setText("");
+                        et_lastdonatedDate.setText("");
 
 
 
@@ -232,14 +241,14 @@ public class becomeadonor extends AppCompatActivity {
         arblood.add("O+");
 
         ArrayAdapter<String> bloodAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, arblood);
-        bloodGroup.setAdapter(bloodAdapter);
+        tv_bloodGroup.setAdapter(bloodAdapter);
 
         //---------------------gender
         argender.add("Male");
         argender.add("Female");
         argender.add("Other");
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, argender);
-        gender.setAdapter(genderAdapter);
+        tv_gender.setAdapter(genderAdapter);
     }
 
     // Helper function to check if an EditText is filled
@@ -248,23 +257,35 @@ public class becomeadonor extends AppCompatActivity {
     }
 
     public void becomeDonor() {
+        SharedPreferences sharedPreferencesauth = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+        String userId = sharedPreferencesauth.getString("userId",null);
+        Log.d("userId is", " " +userId);
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String latitude = sharedPreferences.getString("latitude",null);
+        String longitude = sharedPreferences.getString("longitude",null);
         String URL = sharedPreferences.getString("URL", null);
         String url = URL +"/api/v1/members";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("firstname",firstName.getText() );
-            jsonRequest.put("middlename", middleName.getText());
-            jsonRequest.put("lastname", lastName.getText());
-            jsonRequest.put("dateOfBirth", dob.getText());
-            jsonRequest.put("bloodGroup", bloodGroup.getText());
-            jsonRequest.put("gender", gender.getText());
-            jsonRequest.put("lastTimeOfDonation", lastdonatedtime.getText());
+            jsonRequest.put("firstname",firstName );
+            jsonRequest.put("middlename", middleName);
+            jsonRequest.put("lastname", lastName);
+            jsonRequest.put("dateOfBirth", dob);
+            jsonRequest.put("bloodGroup", bloodGroup);
+            jsonRequest.put("gender", gender);
+            jsonRequest.put("lastTimeOfDonation", lastDonatedDate);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 jsonRequest.put("registrationDate", LocalDate.now());
             }
+            JSONObject memberLocationObject = new JSONObject();
+            memberLocationObject.put("latitude",latitude);
+            memberLocationObject.put("longitude",longitude);
+            jsonRequest.put("memberLocation",memberLocationObject);
+            Log.d("nestedRequest",jsonRequest.toString());
+
+
 
         } catch (JSONException e) {
            e.printStackTrace();
@@ -276,15 +297,14 @@ public class becomeadonor extends AppCompatActivity {
                 try {
                     id = response.getString("id");
                     Log.d("memberResponse","id is"+id);
-                    updateMemberLocation(id);
+                    setUserId(id,userId);
                 } catch (JSONException e) {
-                    Log.d("exceptionInResponse",e.toString());
+                    Log.d("xceptionInResponse",e.toString());
                 }
 
                 Intent intent = new Intent(becomeadonor.this, dashboard.class);
                 // This Token has null value but why??
-
-                //startActivity(intent);
+                startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -310,61 +330,6 @@ public class becomeadonor extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
-    public void updateMemberLocation(String id){
-        //for lat long generation from Address
-
-
-        GeoCodeLocation locationAddress = new GeoCodeLocation();
-        locationAddress.getAddressFromLocation(Address, getApplicationContext(), new GeoCoderHandler());
-
-        //fetching URL
-        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
-        String URL = sharedPreferences.getString("URL", null);
-        String latitude = sharedPreferences.getString("latitude",null);
-        String longitude = sharedPreferences.getString("longitude",null);
-        String url = URL + "/api/v1/member-locations";
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-
-        JSONObject jsonRequest = new JSONObject();
-        try {
-            Log.d("Id2","id in memlocationfunctio is"+ id);
-            jsonRequest.put("memberLocation",id);
-            jsonRequest.put("latitude",latitude);
-            jsonRequest.put("longitude",longitude);
-
-        } catch (JSONException e) {
-           Log.d("ExceptionJsonbeco",e.toString());
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,jsonRequest,new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(becomeadonor.this, "Data updated successfully!", Toast.LENGTH_SHORT).show();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.d("volleyerrorUpdareMember", error.toString());
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
-                String Token = sharedPreferences.getString("AuthToken", null);
-                Log.d("BeDonorTokeninheader",Token);
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer "+Token);
-
-                return headers;
-            }
-        };
-
-        requestQueue.add(jsonObjectRequest);
-
-
-
-    }
     private class GeoCoderHandler extends Handler {
         @Override
         public void handleMessage(Message message) {
@@ -383,14 +348,46 @@ public class becomeadonor extends AppCompatActivity {
             editor.putString("latitude",parts[0]);
             editor.putString("longitude",parts[1]);
             editor.apply();
-
-
-
-            //chandan chat bhandar
+            becomeDonor();
             Log.d("Location1",locationAddress);
+
         }
 
 
+    }
+    public void setUserId(String memberId, String userId){
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL +"/api/v1/members/setUserId/" +memberId + "/"+userId;
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+Log.d("seruserIdresponse",response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d("volleyErroruserIdset", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+//                Intent i = getIntent();
+//                String Token = i.getStringExtra("Token");
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                Log.d("BeDonorTokeninheader",Token);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
     }
 
 

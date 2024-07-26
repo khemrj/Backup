@@ -242,8 +242,8 @@ ActivitySignUpBinding binding;
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("volleyError", error.toString());
+                Toast.makeText(getApplicationContext(), "Invalid Credential Enter again", Toast.LENGTH_SHORT).show();
+
             }
         });
 

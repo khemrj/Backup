@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-class GeoCodeLocation {
+public class GeoCodeLocation {
     private static final String TAG = "GeoCodeLocation";
     public static void getAddressFromLocation(final String locationAddress,
                                               final Context context, final Handler handler) {
