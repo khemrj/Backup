@@ -39,11 +39,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class searchdonor extends AppCompatActivity {
 
     ActivitySearchdonorBinding binding;
-    ArrayList<String>arrbloodGroup=new ArrayList<>();
+    String stringBloodGroup,stringName,stringpints,stringPhone;
+    private String requesterId,universalLocation;
+    ArrayList<String>arrbloodGroup=  new ArrayList<>();
     ArrayList<String>arrpint=new ArrayList<>();
 
     @Override
@@ -82,8 +85,13 @@ public class searchdonor extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                stringBloodGroup = binding.bloodgroup.getText().toString();
+                stringpints = binding.pintEditText.getText().toString();
+                stringName = binding.patientNameEditText.getText().toString();
+                stringPhone=binding.phone.getText().toString();
+                GeoCodeLocation locationAddress = new GeoCodeLocation();
+                locationAddress.getAddressFromLocation(binding.addressEditText.getText().toString(), getApplicationContext(), new GeoCoderHandler());
 
-                ReuuestBlood();
                 //geocode
 
 //                if(binding.checkBox.isChecked())
@@ -108,11 +116,7 @@ public class searchdonor extends AppCompatActivity {
                 if (patient.isEmpty() && bloodgroup.isEmpty() && pint.isEmpty() && s.isEmpty()) {
                     Toast.makeText(searchdonor.this, "Please enter a field", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(searchdonor.this, dlist.class);
-                    intent.putExtra("bloodgroup", bloodgroup);
-                    intent.putExtra("pints", pint);
-                    intent.putExtra("address", s);
-                    startActivity(intent);
+
                 }
 
             }
@@ -223,26 +227,31 @@ public class searchdonor extends AppCompatActivity {
         }
         return null; // Return null if email is valid
     }
-    public void ReuuestBlood() {
-
-        GeoCodeLocation locationAddress = new GeoCodeLocation();
-        locationAddress.getAddressFromLocation(binding.addressEditText.getText().toString(), getApplicationContext(), new GeoCoderHandler());
+    public void RequestBlood(String lat, String lon) {
 
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferencesauth = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+       String userId = sharedPreferencesauth.getString("userId",null);
         String URL = sharedPreferences.getString("URL", null);
-        String lat = sharedPreferences.getString("latitudeSearch",null);
-        String lon = sharedPreferences.getString("longitudeSearch",null);
         String url = URL +"/api/v1/requesters";
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         JSONObject jsonRequest = new JSONObject();
         try {
-            jsonRequest.put("bloodGroup",binding.bloodgroup.getText());
+            jsonRequest.put("bloodGroup",stringBloodGroup);
             jsonRequest.put("latitude",lat);
+            jsonRequest.put("name",stringName);
             jsonRequest.put("longitude", lon);
-            jsonRequest.put("phone", binding.phone.getText());
-            jsonRequest.put("pints", binding.pintEditText.getText());
-
+            jsonRequest.put("phone", stringPhone);
+            jsonRequest.put("pints", stringpints);
+            JSONObject memberLocationObject = new JSONObject();
+            JSONObject userInfoObject = new JSONObject();
+            memberLocationObject.put("latitude",lat);
+            userInfoObject.put("id",userId);
+            memberLocationObject.put("longitude",lon);
+            jsonRequest.put("memberLocation",memberLocationObject);
+            jsonRequest.put("userInfo",userInfoObject);
+            Log.d("requesterJsonObject is",jsonRequest.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -250,11 +259,20 @@ public class searchdonor extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-
-                Intent intent = new Intent(searchdonor.this,dlist.class);
-                // This Token has null value but why??
-                startActivity(intent);
+                Log.d("RequesterResponse",response.toString());
+                try {
+                   requesterId = response.getString("id");
+                   saveToRequestTable(requesterId);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+               if(!universalLocation.isEmpty()){
+                   Intent intent = new Intent(searchdonor.this,dlist.class);
+                   startActivity(intent);
+            }
+               else {
+                   Toast.makeText(searchdonor.this, "Please Enter correct Address", Toast.LENGTH_SHORT).show();
+               }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -293,19 +311,105 @@ public class searchdonor extends AppCompatActivity {
                 default:
                     locationAddress = null;
             }
-            SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+
             String[] parts = locationAddress.split(" ");
-            editor.putString("latitudeSearch",parts[0]);
-            editor.putString("longitudeSearch",parts[1]);
-            editor.apply();
+            universalLocation = locationAddress;
 
+            if(!locationAddress.isEmpty()){
+            RequestBlood(parts[0],parts[1]);}
+                else{
+                    Toast.makeText(searchdonor.this, "Please Enter correct Address", Toast.LENGTH_SHORT).show();
+                }
 
-            Log.d("Location1",locationAddress);
 
         }
 
 
+    }
+    public void saveRequest(){
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String lat = sharedPreferences.getString("latitudeSearch",null);
+        String lon = sharedPreferences.getString("longitudeSearch",null);
+        String url = URL +"/api/v1/requesters";
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("totalPintsDonated",binding.bloodgroup.getText());
+            jsonRequest.put("latitude",lat);
+            jsonRequest.put("longitude", lon);
+            jsonRequest.put("requester_id", lon);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+
+                Intent intent = new Intent(searchdonor.this,dlist.class);
+                // This Token has null value but why??
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("volleyError", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+
+    }
+    public void saveToRequestTable(String requesterId){
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL +"/api/requests/send/"+requesterId;
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                Toast.makeText(searchdonor.this, "request sent to nearest Donors", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("volleyError", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
     }
 }
 
