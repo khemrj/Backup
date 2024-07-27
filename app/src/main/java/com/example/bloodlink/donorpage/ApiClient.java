@@ -43,7 +43,7 @@ public class ApiClient {
     }
 
     public void getDonors(final VolleyCallback callback) {
-        String url = "http://192.168.18.7:8085/api/requests"; // Replace with your actual API endpoint
+        String url = "http://192.168.123.113:8085/api/requests"; // Replace with your actual API endpoint
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
@@ -69,34 +69,39 @@ public class ApiClient {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject jsonObject = response.getJSONObject(i);
                 JSONObject requesterObj = jsonObject.getJSONObject("requester");
-                JSONObject donorInfoObj = jsonObject.getJSONObject("donorInfo");
+                JSONObject donorInfoObj = jsonObject.optJSONObject("donorInfo");
 
-                String name = donorInfoObj.getJSONObject("memberInfo").getString("firstname") +
-                        " " + donorInfoObj.getJSONObject("memberInfo").getString("lastname");
-                String age  = calculateAge(donorInfoObj.getJSONObject("memberInfo").getString("dateOfBirth"));
-                String bloodgroup = donorInfoObj.getJSONObject("memberInfo").getString("bloodGroup");
+                // Extract information from requester
+                String firstName = requesterObj.optString("name", "Unknown");
+                String lastName = ""; // Last name is not present in the JSON, use empty string or handle accordingly
+                String name = firstName + " " + lastName;
 
-                // Check if "pints" exists in the JSON object
-                int pints = 0; // Default value if "pints" is missing
-                if (donorInfoObj.has("pints")) {
-                    pints = donorInfoObj.getInt("pints");
-                }
+                // Extract age and blood group
+                String bloodgroup = requesterObj.optString("bloodGroup", "Unknown");
+                int pints = requesterObj.optInt("pints", 0);
 
-                String location = requesterObj.getString("latitude") + ", " + requesterObj.getString("longitude");
+                // Location
+                String latitude = requesterObj.optString("latitude", "0");
+                String longitude = requesterObj.optString("longitude", "0");
+                String location = latitude + ", " + longitude;
+
+                // Default age since no birth date information is available
+                String age = "Unknown";
 
                 DonorModel donorModel = new DonorModel(name, age, bloodgroup, pints, location);
                 donorModels.add(donorModel);
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            System.err.println("Error parsing JSON response: " + e.getMessage());
         }
         return donorModels;
     }
 
 
+
     private String calculateAge(String dateOfBirth) {
         String age = Utils.calculateAge(dateOfBirth);
         return age;
-
     }
 }
