@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.bloodlink.StorageClass;
 import com.example.bloodlink.becomeadonor.becomeadonor;
 import com.example.bloodlink.dashboard.dashboard;
 import com.example.bloodlink.databinding.ActivitySearchdonorBinding;
@@ -262,6 +263,8 @@ public class searchdonor extends AppCompatActivity {
                 Log.d("RequesterResponse",response.toString());
                 try {
                    requesterId = response.getString("id");
+                    StorageClass s = new StorageClass();
+                    s.setRequesterId(requesterId);
                    saveToRequestTable(requesterId);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -326,57 +329,7 @@ public class searchdonor extends AppCompatActivity {
 
 
     }
-    public void saveRequest(){
 
-
-        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
-        String URL = sharedPreferences.getString("URL", null);
-        String lat = sharedPreferences.getString("latitudeSearch",null);
-        String lon = sharedPreferences.getString("longitudeSearch",null);
-        String url = URL +"/api/v1/requesters";
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-
-        JSONObject jsonRequest = new JSONObject();
-        try {
-            jsonRequest.put("totalPintsDonated",binding.bloodgroup.getText());
-            jsonRequest.put("latitude",lat);
-            jsonRequest.put("longitude", lon);
-            jsonRequest.put("requester_id", lon);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-
-                Intent intent = new Intent(searchdonor.this,dlist.class);
-                // This Token has null value but why??
-                startActivity(intent);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("volleyError", error.toString());
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
-                String Token = sharedPreferences.getString("AuthToken", null);
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Bearer "+Token);
-
-                return headers;
-            }
-        };
-
-        requestQueue.add(jsonObjectRequest);
-
-    }
     public void saveToRequestTable(String requesterId){
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferences.getString("URL", null);

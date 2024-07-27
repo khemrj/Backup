@@ -1,6 +1,9 @@
 package com.example.bloodlink.donorpage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -43,8 +46,10 @@ public class ApiClient {
     }
 
     public void getDonors(final VolleyCallback callback) {
-        String url = "http://192.168.1.73:8085/api/requests"; // Replace with your actual API endpoint
-
+//        SharedPreferences sharedPreferencesurl = ctx.getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+//        String URL = sharedPreferencesurl.getString("URL", null);
+        String url = "http://192.168.123.113:8085/api/requestshh"; // Replace with your actual API endpoint
+        Log.d("funct", "functionCalled");
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
