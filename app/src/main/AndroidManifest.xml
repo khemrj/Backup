@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -9,8 +9,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING"/>
+
 
     <application
         android:allowBackup="true"
@@ -23,6 +24,7 @@
         android:theme="@style/Theme.BloodLink"
         android:usesCleartextTraffic="true"
         tools:targetApi="31" >
+        <!-- Activities -->
         <activity
             android:name=".utility.Base"
             android:exported="false" />
@@ -33,21 +35,9 @@
             android:name=".MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps" />
-        <!--
-             TODO: Before you run your application, you need a Google Maps API key.
-
-             To get one, follow the directions here:
-
-                https://developers.google.com/maps/documentation/android-sdk/get-api-key
-
-             Once you have your API key (it starts with "AIza"), define a new property in your
-             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
-             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
-        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBecVmH1Y3ZVu6YjtOsBOW-mPYQrSOq_Gc" />
-
         <activity
             android:name=".dlist"
             android:exported="false" />
@@ -59,8 +49,7 @@
             android:exported="false" />
         <activity
             android:name=".dashboard.dashboard"
-            android:exported="true" >
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".myprofile.myprofile"
             android:exported="false" />
@@ -75,18 +64,17 @@
             android:exported="true" />
         <activity
             android:name=".Login_SignUp_ForgetPassword_Portal.MainActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".SplashScreen.SplashScreen"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- Receivers -->
         <receiver
             android:name=".utility.NetworkChangeListener"
             android:exported="true" >
@@ -94,6 +82,11 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-    </application>
 
+        <!-- Services -->
+        <service
+            android:name=".NotificationService"
+            android:foregroundServiceType="remoteMessaging"
+            android:exported="false" />
+    </application>
 </manifest>

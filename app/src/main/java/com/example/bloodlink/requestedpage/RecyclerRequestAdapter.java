@@ -1,9 +1,12 @@
 package com.example.bloodlink.requestedpage;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,8 +19,8 @@ import java.util.ArrayList;
 
 public class RecyclerRequestAdapter extends RecyclerView.Adapter<RecyclerRequestAdapter.ViewHolder> {
 
-    Context context;
-    ArrayList<RequesterModel> arrRequest;
+    private Context context;
+    private ArrayList<RequesterModel> arrRequest;
 
     public RecyclerRequestAdapter(Context context, ArrayList<RequesterModel> arrRequest) {
         this.context = context;
@@ -28,8 +31,7 @@ public class RecyclerRequestAdapter extends RecyclerView.Adapter<RecyclerRequest
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.requested_row, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -41,7 +43,8 @@ public class RecyclerRequestAdapter extends RecyclerView.Adapter<RecyclerRequest
         holder.txtPints.setText(String.valueOf(requester.getPints()));
         holder.txtLocation.setText(requester.getLatitude() + ", " + requester.getLongitude());
 
-        // Handle other UI components and listeners as needed
+        // Set click listener for the image button
+        holder.imageButton.setOnClickListener(v -> openGoogleMaps(requester.getLatitude(), requester.getLongitude()));
     }
 
     @Override
@@ -49,9 +52,20 @@ public class RecyclerRequestAdapter extends RecyclerView.Adapter<RecyclerRequest
         return arrRequest.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private void openGoogleMaps(double latitude, double longitude) {
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude + "(Location)");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(mapIntent);
+        }
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtName, txtBloodGroup, txtPints, txtLocation;
         ImageView imgContact;
+        ImageButton imageButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +74,7 @@ public class RecyclerRequestAdapter extends RecyclerView.Adapter<RecyclerRequest
             txtBloodGroup = itemView.findViewById(R.id.txtBloodGroup);
             txtPints = itemView.findViewById(R.id.txtPints);
             txtLocation = itemView.findViewById(R.id.txtLocation);
+            imageButton = itemView.findViewById(R.id.locationPin);
         }
     }
 }

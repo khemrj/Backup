@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -146,6 +147,15 @@
                             android:layout_weight="1"
                             android:hint="location"
                             android:textSize="16sp" />
+                        <ImageButton
+                            android:id="@+id/locationPin"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:background="@drawable/baseline_location_on_24"
+                            android:contentDescription="locationPin"
+                            android:contextClickable="true" />
+
 
                     </LinearLayout>
 
@@ -159,7 +169,8 @@
                             style="@style/Widget.AppCompat.Button"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:text="Requested" />
+                            android:text="Requested"
+                            tools:ignore="TouchTargetSizeCheck" />
 
                     </LinearLayout>
 
