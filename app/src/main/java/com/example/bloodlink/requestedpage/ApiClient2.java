@@ -1,6 +1,7 @@
 package com.example.bloodlink.requestedpage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -9,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.bloodlink.StorageClass;
 import com.example.bloodlink.donorpage.Utils;
 
 import org.json.JSONArray;
@@ -18,9 +20,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ApiClient2 {
+    public static Context getCtx() {
+        return ctx;
+    }
+
     private static ApiClient2 instance;
     private RequestQueue requestQueue;
     private static Context ctx;
+
 
     private ApiClient2(Context context) {
         ctx = context;
@@ -46,9 +53,13 @@ public class ApiClient2 {
         void onError(VolleyError error);
     }
 
-    public void getRequestors(final VolleyCallback callback) {
-        String url = "http://192.168.1.73:8085/api/requests"; // Replace with your actual API endpoint
+    public void getRequestors(final VolleyCallback callback) { //working one
 
+
+        StorageClass s = new StorageClass();
+        String requesterId = s.getRequesterId();
+        Log.d("requesteridkkk", " "+requesterId);
+        String url = "http://192.168.123.113:8085/api/requests/getRequestByRequesterId/1802"; // Replace with your actual API endpoint
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override

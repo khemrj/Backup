@@ -25,6 +25,7 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.bloodlink.R;
+import com.example.bloodlink.StorageClass;
 import com.example.bloodlink.databinding.ActivityDashboardBinding;
 import com.example.bloodlink.donorpage.RecyclerDonorAdapter;
 import com.example.bloodlink.donorpage.donorPage;
@@ -98,6 +99,9 @@ ActivityDashboardBinding binding;
     public void setIdInSharedPreferences(){
         Log.d("kkk","functionCalled");
         SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+        String requesterId = sharedPreferences.getString("requesterId",null);
+        StorageClass s = new StorageClass();
+        s.setRequesterId(requesterId);
         String phone = sharedPreferences.getString("phone",null);
         SharedPreferences sharedPreferencesurl = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferencesurl.getString("URL", null);
