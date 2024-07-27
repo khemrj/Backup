@@ -263,6 +263,10 @@ public class searchdonor extends AppCompatActivity {
                 Log.d("RequesterResponse",response.toString());
                 try {
                    requesterId = response.getString("id");
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("requesterId",requesterId);
+                    Log.d("requesterIdinsearch","r"+ requesterId);
+                    editor.apply();
                     StorageClass s = new StorageClass();
                     s.setRequesterId(requesterId);
                    saveToRequestTable(requesterId);
