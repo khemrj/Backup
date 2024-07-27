@@ -43,7 +43,7 @@ public class ApiClient {
     }
 
     public void getDonors(final VolleyCallback callback) {
-        String url = "http://192.168.1.73:8085/api/requests"; // Replace with your actual API endpoint
+        String url = "http://192.168.18.7:8085/api/requests"; // Replace with your actual API endpoint
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {

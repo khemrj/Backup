@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.com.fasterxml.jackson.core.JsonPointer.compile
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -48,5 +50,6 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:21.2.0")
     implementation ("com.google.maps.android:android-maps-utils:3.8.2")
     implementation ("com.airbnb.android:lottie:3.4.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
 
 }
