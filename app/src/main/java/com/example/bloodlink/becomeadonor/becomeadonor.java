@@ -364,6 +364,7 @@ public class becomeadonor extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 Log.d("seruserIdresponse",response);
+                setDonorId(memberId);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -388,6 +389,42 @@ Log.d("seruserIdresponse",response);
         };
 
         requestQueue.add(jsonObjectRequest);
+    }
+    public void setDonorId(String id){
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL +"/api/v1/donor-infos/"+ id ;
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("seruserIdresponse",response);
+                Toast.makeText(becomeadonor.this, "DonorId is set", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("volleyErroruserIdset", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+//                Intent i = getIntent();
+//                String Token = i.getStringExtra("Token");
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                Log.d("BeDonorTokeninheader",Token);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+
+
     }
 
 
