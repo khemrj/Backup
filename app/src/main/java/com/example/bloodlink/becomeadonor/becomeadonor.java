@@ -404,6 +404,7 @@ Log.d("seruserIdresponse",response);
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferences.getString("URL", null);
         String url = URL +"/api/v1/donor-infos/"+ id ;
+        Log.d("donorId"," "+id);
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

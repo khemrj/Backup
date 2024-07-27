@@ -388,7 +388,6 @@ public class searchdonor extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
 
-
                 Toast.makeText(searchdonor.this, "request sent to nearest Donors", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
