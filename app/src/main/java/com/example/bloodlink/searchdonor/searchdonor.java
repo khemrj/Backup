@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.bloodlink.StorageClass;
 import com.example.bloodlink.becomeadonor.becomeadonor;
 import com.example.bloodlink.dashboard.dashboard;
 import com.example.bloodlink.databinding.ActivitySearchdonorBinding;
@@ -45,7 +46,7 @@ public class searchdonor extends AppCompatActivity {
 
     ActivitySearchdonorBinding binding;
     String stringBloodGroup,stringName,stringpints,stringPhone;
-    private String requesterId;
+    private String requesterId,universalLocation;
     ArrayList<String>arrbloodGroup=  new ArrayList<>();
     ArrayList<String>arrpint=new ArrayList<>();
 
@@ -262,13 +263,23 @@ public class searchdonor extends AppCompatActivity {
                 Log.d("RequesterResponse",response.toString());
                 try {
                    requesterId = response.getString("id");
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("requesterId",requesterId);
+                    Log.d("requesterIdinsearch","r"+ requesterId);
+                    editor.apply();
+                    StorageClass s = new StorageClass();
+                    s.setRequesterId(requesterId);
+                   saveToRequestTable(requesterId);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
-
-                Intent intent = new Intent(searchdonor.this,dlist.class);
-                // This Token has null value but why??
-                startActivity(intent);
+               if(!universalLocation.isEmpty()){
+                   Intent intent = new Intent(searchdonor.this,dlist.class);
+                   startActivity(intent);
+            }
+               else {
+                   Toast.makeText(searchdonor.this, "Please Enter correct Address", Toast.LENGTH_SHORT).show();
+               }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -309,43 +320,32 @@ public class searchdonor extends AppCompatActivity {
             }
 
             String[] parts = locationAddress.split(" ");
+            universalLocation = locationAddress;
 
+            if(!locationAddress.isEmpty()){
+            RequestBlood(parts[0],parts[1]);}
+                else{
+                    Toast.makeText(searchdonor.this, "Please Enter correct Address", Toast.LENGTH_SHORT).show();
+                }
 
-            RequestBlood(parts[0],parts[1]);
-            Log.d("Location1",locationAddress);
 
         }
 
 
     }
-    public void saveRequest(){
 
-
+    public void saveToRequestTable(String requesterId){
         SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferences.getString("URL", null);
-        String lat = sharedPreferences.getString("latitudeSearch",null);
-        String lon = sharedPreferences.getString("longitudeSearch",null);
-        String url = URL +"/api/v1/requesters";
+        String url = URL +"/api/requests/send/"+requesterId;
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-        JSONObject jsonRequest = new JSONObject();
-        try {
-            jsonRequest.put("totalPintsDonated",binding.bloodgroup.getText());
-            jsonRequest.put("latitude",lat);
-            jsonRequest.put("longitude", lon);
-            jsonRequest.put("requester_id", lon);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
-
-                Intent intent = new Intent(searchdonor.this,dlist.class);
-                // This Token has null value but why??
-                startActivity(intent);
+                Toast.makeText(searchdonor.this, "request sent to nearest Donors", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -367,7 +367,6 @@ public class searchdonor extends AppCompatActivity {
         };
 
         requestQueue.add(jsonObjectRequest);
-
     }
 }
 

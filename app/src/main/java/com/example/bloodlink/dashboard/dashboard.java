@@ -25,6 +25,7 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.bloodlink.R;
+import com.example.bloodlink.StorageClass;
 import com.example.bloodlink.databinding.ActivityDashboardBinding;
 import com.example.bloodlink.donorpage.RecyclerDonorAdapter;
 import com.example.bloodlink.donorpage.donorPage;
@@ -47,8 +48,9 @@ ActivityDashboardBinding binding;
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding=ActivityDashboardBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
         setIdInSharedPreferences();
+        setContentView(binding.getRoot());
+
         requests=findViewById(R.id.requests);
         requests.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +65,7 @@ ActivityDashboardBinding binding;
         notify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent i = new Intent(dashboard.this, donorPage.class);
                 startActivity(i);
             }
@@ -78,6 +81,7 @@ ActivityDashboardBinding binding;
         binding.requested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent=new Intent(dashboard.this, searchdonor.class);
                 startActivity(intent);
             }
@@ -93,7 +97,11 @@ ActivityDashboardBinding binding;
 
     }
     public void setIdInSharedPreferences(){
+        Log.d("kkk","functionCalled");
         SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+        String requesterId = sharedPreferences.getString("requesterId",null);
+        StorageClass s = new StorageClass();
+        s.setRequesterId(requesterId);
         String phone = sharedPreferences.getString("phone",null);
         SharedPreferences sharedPreferencesurl = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
         String URL = sharedPreferencesurl.getString("URL", null);
@@ -107,7 +115,7 @@ ActivityDashboardBinding binding;
                     public void onResponse(String response) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("userId",response);
-                        Log.d("userdindash",response);
+                        Log.d("userIdInDash",response);
                        editor.apply();
                     }
                 },
@@ -120,8 +128,8 @@ ActivityDashboardBinding binding;
                 }
         );
 
-        // Add the request to the RequestQueue
         requestQueue.add(jsonArrayRequest);
+        Log.d("ll","requested queed");
 
     }
     }

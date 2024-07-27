@@ -180,8 +180,6 @@ public class becomeadonor extends AppCompatActivity {
                 lastDonatedDate = et_lastdonatedDate.getText().toString();
                // registrationDate =  ;
                 gender = tv_gender.getText().toString();
-                GeoCodeLocation locationAddress = new GeoCodeLocation();
-                locationAddress.getAddressFromLocation(et_address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
 
                 // Check if the checkbox is checked
 //                if (checkBox.isChecked()) {
@@ -199,18 +197,20 @@ public class becomeadonor extends AppCompatActivity {
                             !dobText.isEmpty() &&
                             isEditTextFilled(et_lastdonatedDate)&&
                             isEditTextFilled(tv_gender)) {
+                        GeoCodeLocation locationAddress = new GeoCodeLocation();
+                        locationAddress.getAddressFromLocation(et_address.getText().toString(), getApplicationContext(), new GeoCoderHandler());
+
                         // ------All fields are filled, show success message OR DATABASE HALNU
 
                         // Clear all EditText fields
-                        et_firstName.getText().clear();
-                        et_middleName.getText().clear();
-                        et_lastName.getText().clear();
-                        tv_bloodGroup.getText().clear();
-                        et_address.getText().clear();
-
-                        tv_gender.getText().clear();
-                        et_dob.setText("");
-                        et_lastdonatedDate.setText("");
+//                        et_firstName.getText().clear();
+//                        et_middleName.getText().clear();
+//                        et_lastName.getText().clear();
+//                        tv_bloodGroup.getText().clear();
+//                        et_address.getText().clear();
+//                        tv_gender.getText().clear();
+//                        et_dob.setText("");
+//                        et_lastdonatedDate.setText("");
 
 
 
@@ -250,6 +250,7 @@ public class becomeadonor extends AppCompatActivity {
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, argender);
         tv_gender.setAdapter(genderAdapter);
     }
+
 
     // Helper function to check if an EditText is filled
     private boolean isEditTextFilled(EditText editText) {
@@ -344,12 +345,21 @@ public class becomeadonor extends AppCompatActivity {
             }
             SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            String[] parts = locationAddress.split(" ");
-            editor.putString("latitude",parts[0]);
-            editor.putString("longitude",parts[1]);
-            editor.apply();
-            becomeDonor();
-            Log.d("Location1",locationAddress);
+            try {
+                String[] parts = locationAddress.split(" ");
+                editor.putString("latitude", parts[0]);
+                editor.putString("longitude", parts[1]);
+                editor.apply();
+                Log.d("Location1",locationAddress);
+                becomeDonor();
+            }
+            catch (Exception E){
+                Toast.makeText(becomeadonor.this, "Please enter valid address", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+
 
         }
 
@@ -364,6 +374,7 @@ public class becomeadonor extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 Log.d("seruserIdresponse",response);
+                setDonorId(memberId);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -388,6 +399,43 @@ Log.d("seruserIdresponse",response);
         };
 
         requestQueue.add(jsonObjectRequest);
+    }
+    public void setDonorId(String id){
+        SharedPreferences sharedPreferences = getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
+        String URL = sharedPreferences.getString("URL", null);
+        String url = URL +"/api/v1/donor-infos/"+ id ;
+        Log.d("donorId"," "+id);
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("seruserIdresponse",response);
+                Toast.makeText(becomeadonor.this, "DonorId is set", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("volleyErroruserIdset", error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+//                Intent i = getIntent();
+//                String Token = i.getStringExtra("Token");
+                SharedPreferences sharedPreferences = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE);
+                String Token = sharedPreferences.getString("AuthToken", null);
+                Log.d("BeDonorTokeninheader",Token);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer "+Token);
+
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+
+
     }
 
 
