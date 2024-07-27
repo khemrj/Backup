@@ -49,7 +49,7 @@ public class ApiClient {
 
 //        SharedPreferences sharedPreferencesurl = ctx.getSharedPreferences("url_prefs", Context.MODE_PRIVATE);
 //        String URL = sharedPreferencesurl.getString("URL", null);
-        String url = "http://192.168.123.113:8085/api/requestshh"; // Replace with your actual API endpoint
+        String url = "http://192.168.18.7:8085/api/requests"; // Replace with your actual API endpoint
         Log.d("funct", "functionCalled");
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,

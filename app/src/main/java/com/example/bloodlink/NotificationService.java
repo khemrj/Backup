@@ -51,7 +51,7 @@ public class NotificationService extends Service {
 
     private void connectWebSocket() {
         Request request = new Request.Builder()
-                .url("ws://192.168.123.33:8085/ws")
+                .url("ws://192.168.18.7:8085/ws")
                 .build();
         WebSocketListener listener = new WebSocketListener() {
             @Override
