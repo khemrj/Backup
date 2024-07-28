@@ -28,6 +28,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,7 +100,40 @@ String s=txtName.getText().toString();
 
                     }
                     if(flag == 1){
-                        Toast.makeText(myprofile.this, memberName + bloodGroup + dob, Toast.LENGTH_SHORT).show();
+                        txtBloodGroup.setText(bloodGroup);
+                        txtName.setText(memberName);
+                        DateTimeFormatter formatter = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        }
+
+
+                        // Parse the string to a LocalDate object
+                        LocalDate localdate = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                             localdate = LocalDate.parse(dob, formatter);
+                        }
+
+                        // Get the current date
+                        LocalDate currentDate = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            currentDate = LocalDate.now();
+                        }
+
+                        // Calculate the period between the dob and the current date
+                        Period period = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            period = Period.between(localdate, currentDate);
+                        }
+                            int age = 100;
+                        // Get the years, which represents the age
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                             age = period.getYears();
+                        }
+                        txtAge.setText(age);
+                        button2.setEnabled(false);
+
+                        Toast.makeText(myprofile.this, memberName + bloodGroup + dob +age, Toast.LENGTH_SHORT).show();
                     }
                     else {
                         Toast.makeText(myprofile.this, "Please become donor to help people", Toast.LENGTH_SHORT).show();
