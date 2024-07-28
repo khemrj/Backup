@@ -60,7 +60,7 @@ public class ApiClient2 {
         StorageClass s = new StorageClass();
         String requesterId = s.getRequesterId();
         Log.d("requesteridkkk", " "+requesterId);
-        String url = "http://192.168.18.7:8085/api/requests"; // Replace with your actual API endpoint
+        String url = "http://192.168.1.7:8085/api/requests"; // Replace with your actual API endpoint
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
