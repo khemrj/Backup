@@ -167,18 +167,12 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
+        android:id="@+id/becomedonorbutton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="50dp"
-            android:text="@string/become_a_donor"
-            android:background="@drawable/edit_round"/>
+
 
     </LinearLayout>
 

@@ -3,10 +3,14 @@ package com.example.bloodlink.myprofile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,13 +49,14 @@ Button button2;//declaration for button2
         getMemberById();
         setContentView(R.layout.activity_myprofile);
         txtName=findViewById(R.id.txtName);
+
         txtAge=findViewById(R.id.txtAge);
         txtBloodGroup=findViewById(R.id.txtBloodGroup);
        // txtPints=findViewById(R.id.txtPints);
         txtLocation=findViewById(R.id.txtLocation);
         txtType=findViewById(R.id.txtType);
         textView=findViewById(R.id.textView);
-        button2=findViewById(R.id.button2);//find and assigning the value button2
+     //   button2=findViewById(R.id.button2);//find and assigning the value button2
         txtName.setText("Suman Shah");
         txtAge.setText("23");
         txtBloodGroup.setText("B+");
@@ -136,6 +141,18 @@ String s=txtName.getText().toString();
                         Toast.makeText(myprofile.this, memberName + bloodGroup + dob +age, Toast.LENGTH_SHORT).show();
                     }
                     else {
+                        LinearLayout layout1 = findViewById(R.id.becomedonorbutton);
+                        Button btn_becomeDonor = new Button(getApplicationContext());
+                        btn_becomeDonor.setTextSize(20); // Text size in SP
+                        btn_becomeDonor.setTextColor(Color.WHITE);
+                        btn_becomeDonor.setBackgroundColor(Color.BLUE);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        btn_becomeDonor.setLayoutParams(params);
+                        layout1.addView(btn_becomeDonor);
+                        params.setMargins(50, 20, 50, 20);
                         Toast.makeText(myprofile.this, "Please become donor to help people", Toast.LENGTH_SHORT).show();
                     }
 
